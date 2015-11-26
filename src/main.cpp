@@ -27,16 +27,18 @@ struct ModelInputData
     {
         start_army_size             = 100.0;
         start_enemy_size            = 100.0;
-        loose_battle_fraction       = 0.1;
-        army_skill                  = 0.5;
-        enemy_skill                 = 0.5;
-        start_ammo                  = 1000;
+        loose_battle_fraction       = 0.01;
+        army_skill                  = 0.001;
+        enemy_skill                 = 0.001;
+        start_ammo                  = 100;
         ammo_diffusion_coeffient    = 1.0;
-        formation_size            = 10;
-        front_line_fraction         = 0.1;
+        formation_size              = 10;
+        front_line_fraction         = 0.2;
 
-        delta_time                  = 0.1;
-        delta_x                     = 1;
+        delta_time                  = 0.01;
+        delta_x                     = 1.0;
+
+        std::cout << "Courant = " << ammo_diffusion_coeffient * delta_time / (delta_x * delta_x) << std::endl;
     }
 };
 
@@ -58,24 +60,41 @@ struct ModelInfo
     ModelInfo(const ModelInputData& input_data) :
         model_input(input_data)
     {
+        // Initial condition
         old_army_size = input_data.start_army_size;
         old_enemy_size = input_data.start_enemy_size;
 
         new_ammo_amount.resize(input_data.formation_size / input_data.delta_x);
         old_ammo_amount.resize(new_ammo_amount.size());
+
+        old_ammo_amount.front() = model_input.start_ammo;
     }
 
     void advance_time(double delta_time)
     {
         double front_line_size = model_input.front_line_fraction * old_army_size;
-        double available_ammo = old_ammo_amount.back();
+        double enemy_front_line_size = model_input.front_line_fraction * old_enemy_size;
 
-        new_army_size = old_army_size - delta_time * model_input.enemy_skill * front_line_size;
+        // Army
+        new_army_size = old_army_size - delta_time * model_input.enemy_skill * front_line_size * enemy_front_line_size;
         old_army_size = new_army_size;
 
-        new_enemy_size = old_enemy_size - delta_time * model_input.army_skill * available_ammo * front_line_size * old_enemy_size;
+        // Enemy
+        double available_ammo = old_ammo_amount.back();
+        new_enemy_size = old_enemy_size - delta_time * model_input.army_skill * std::min(available_ammo, front_line_size) * enemy_front_line_size;
         old_enemy_size = new_enemy_size;
 
+        // Ammo Diffusion
+        const double C = model_input.ammo_diffusion_coeffient * delta_time / (model_input.delta_x * model_input.delta_x);
+        for(size_t i = 1; i < new_ammo_amount.size() - 1; ++i)
+        {
+            new_ammo_amount[i] = old_ammo_amount[i] + C * (old_ammo_amount[i-1] - 2.0 * old_ammo_amount[i] + old_ammo_amount[i+1]);
+        }
+        // Ammo boundary conditions
+        new_ammo_amount.front() = old_ammo_amount.front();
+        new_ammo_amount.back() = *(old_ammo_amount.rbegin() + 1);
+        new_ammo_amount.back() -= old_ammo_amount.back() / (model_input.ammo_diffusion_coeffient * front_line_size);
+        new_ammo_amount.swap(old_ammo_amount);
 
 
         time += delta_time;
@@ -115,18 +134,20 @@ struct ModelOutput
     {
         output_file << model_info.time << "\t" <<
                        model_info.old_army_size << "\t" <<
-                       model_info.old_enemy_size << std::endl;
+                       model_info.old_enemy_size << "\t" <<
+                       model_info.old_ammo_amount[model_info.old_ammo_amount.size() - 1] << "\t" <<
+                       model_info.old_ammo_amount[model_info.old_ammo_amount.size() / 2] <<
+
+                       std::endl;
     }
 };
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char */*argv*/[])
 {
     ModelInputData model_input;
     ModelInfo model_info(model_input);
     ModelOutput model_output("", model_info, model_input);
-
-    model_info.new_enemy_size = 100;
 
     do
     {
