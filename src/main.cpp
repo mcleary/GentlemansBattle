@@ -34,12 +34,12 @@ struct ModelInputData
     ModelInputData()
     {
         start_army_size             = 1000.0;
-        start_enemy_size            = 2500.0;
+        start_enemy_size            = 1000.0;
         loose_battle_fraction       = 0.05;
         army_skill                  = 0.05;
         enemy_skill                 = 0.01;
-        start_ammo                  = 500;
-        army_fire_rate              = 0.5;
+        start_ammo                  = 1000;
+        army_fire_rate              = 0.9;
         ammo_diffusion_coeffient    = 1.0;
         formation_size              = 10;
         front_line_fraction         = 0.1;
@@ -88,6 +88,8 @@ struct ModelInfo
 
     const ModelInputData& model_input;
 
+    const double CFL = model_input.ammo_diffusion_coeffient * model_input.delta_time / (model_input.delta_x * model_input.delta_x);
+
     ModelInfo(const ModelInputData& input_data) :
         model_input(input_data)
     {
@@ -105,7 +107,7 @@ struct ModelInfo
 
     void advance_time()
     {
-        // Calculates the fraction of the army currently standing in the front-line
+        // Calculates the fraction of the army and enemies currently standing in the front-line
         double front_line_size = model_input.front_line_fraction * old_army_size;
         double enemy_front_line_size = model_input.front_line_fraction * old_enemy_size;
 
@@ -118,22 +120,21 @@ struct ModelInfo
         new_enemy_size = old_enemy_size - model_input.delta_time * model_input.army_skill * shoots_fired * front_line_size * old_enemy_size;
         old_enemy_size = new_enemy_size;
 
-        // Ammo Diffusion
-        const double ddt_dx2 = model_input.ammo_diffusion_coeffient * model_input.delta_time / (model_input.delta_x * model_input.delta_x);
+        // Ammo Diffusion        
         for(size_t i = 1; i < new_ammo_amount.size() - 1; ++i)
         {
-            new_ammo_amount[i] = old_ammo_amount[i] + ddt_dx2 * (old_ammo_amount[i-1] - 2.0 * old_ammo_amount[i] + old_ammo_amount[i+1]);
+            new_ammo_amount[i] = old_ammo_amount[i] + CFL * (old_ammo_amount[i-1] - 2.0 * old_ammo_amount[i] + old_ammo_amount[i+1]);
         }
 
         //
         // Ammo boundary conditions
         //
 
-        // In x=0 there is no flow.
+        // At x=0 there is no flow.
         new_ammo_amount[0] = new_ammo_amount[1];
 
-        // In x=L the ammo is being used by the soldiers
-        double ammo_usage_ratio = 1.0 - (1.0 / front_line_size);
+        // At x=L the ammo is being used by the soldiers
+        double ammo_usage_ratio = 1.0 - (1.0 / front_line_size); // explain this!!
         new_ammo_amount.back() = new_ammo_amount[new_ammo_amount.size() - 2] * ammo_usage_ratio;
 
         // Swap vectors for next time step
@@ -192,7 +193,7 @@ struct ModelInfo
         out << "#-------------------------------------------------" << std::endl;
 
         return out;
-    }
+    }    
 };
 
 struct ModelOutput
@@ -282,6 +283,7 @@ struct GentlesmanBattleModel
     }
 };
 
+// TODO: Organize this!
 QCustomPlot* custom_plot = nullptr;
 
 void init_plot()
@@ -350,6 +352,7 @@ int main(int argc, char *argv[])
 
     GentlesmanBattleModel model;
 
+    // TODO: Organize this functions "init_plot(), add_diffusion_plot(), show_plot() in an object to handle this
     init_plot();
 
     model.step_callback = [&]()
