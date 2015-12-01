@@ -20,3 +20,6 @@ SOURCES += \
     src/main.cpp
 
 HEADERS += \
+
+DISTFILES += \
+    .gitignore
