@@ -1,15 +1,7 @@
-﻿
-#include <iostream>
+﻿#include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <vector>
-#include <stdexcept>
-#include <limits>
-#include <functional>
-#include <thread>
-
-#include <QtWidgets/QApplication>
-#include "qcustomplot.h"
 
 struct ModelInputData
 {
@@ -38,8 +30,8 @@ struct ModelInputData
         loose_battle_fraction       = 0.05;
         army_skill                  = 0.05;
         enemy_skill                 = 0.01;
-        start_ammo                  = 1000;
-        army_fire_rate              = 0.9;
+        start_ammo                  = 200;
+        army_fire_rate              = 0.01;
         ammo_diffusion_coeffient    = 1.0;
         formation_size              = 10;
         front_line_fraction         = 0.1;
@@ -134,7 +126,8 @@ struct ModelInfo
         new_ammo_amount[0] = new_ammo_amount[1];
 
         // At x=L the ammo is being used by the soldiers
-        double ammo_usage_ratio = 1.0 - (1.0 / front_line_size); // explain this!!
+        // Calculates the percentage of ammo used at the frontline.
+        double ammo_usage_ratio = 1.0 - (1.0 / front_line_size);
         new_ammo_amount.back() = new_ammo_amount[new_ammo_amount.size() - 2] * ammo_usage_ratio;
 
         // Swap vectors for next time step
@@ -216,7 +209,8 @@ struct ModelOutput
         output_file << std::setw(10) << std::setprecision(10) << std::fixed << std::setfill('0') <<
                        model_info.time << " " <<
                        model_info.old_army_size << " " <<
-                       model_info.old_enemy_size << " " <<                       
+                       model_info.old_enemy_size << " " <<
+                       model_info.old_ammo_amount.front() << " " <<
                        model_info.old_ammo_amount.back() << " " <<
                        std::endl;
     }
@@ -235,12 +229,21 @@ struct ModelOutput
         {
             std::string output_filename_quotes = "'" + model_output_filename + "'";
             std::string plot_command = "gnuplot -p -e \"plot " +
-                    output_filename_quotes + " using 1:2 with lines title 'Soldiers Amount'," +
-                    output_filename_quotes + " using 1:3 with lines title 'Enemies Amount'," +
-                    output_filename_quotes + " using 1:4 with lines title 'Ammo at rear-guard'" +
+                    output_filename_quotes + " using 1:2 with lines title 'Army'," +
+                    output_filename_quotes + " using 1:3 with lines title 'Enemies'" +
                     "\"";
             std::cout << plot_command << std::endl;
+
+            // show reaction plot
             system(plot_command.data());
+
+            // show diffusion plot
+            plot_command = "gnuplot -p -e \"plot " +
+                    output_filename_quotes + "using 1:4 with lines title 'Ammo at rearguard'," +
+                    output_filename_quotes + "using 1:5 with lines title 'Ammo at frontline'" +
+                    "\"";
+            system(plot_command.data());
+            std::cout << plot_command << std::endl;
         }
     }
 };
@@ -250,11 +253,6 @@ struct GentlesmanBattleModel
     ModelInputData input;
     ModelOutput output;
     ModelInfo info;
-    int iteration = 0;
-
-    typedef std::function<void()> ModelCallbackFunc;
-
-    ModelCallbackFunc step_callback = nullptr;
 
     GentlesmanBattleModel() :
         output("", info, input), info(input)
@@ -270,11 +268,6 @@ struct GentlesmanBattleModel
         {
             output.write_output_step();
             info.advance_time();
-            if(step_callback)
-            {
-                step_callback();
-            }
-            iteration++;
         }
         while(!info.should_stop());
 
@@ -283,97 +276,11 @@ struct GentlesmanBattleModel
     }
 };
 
-// TODO: Organize this!
-QCustomPlot* custom_plot = nullptr;
-
-void init_plot()
+int main()
 {
-    custom_plot = new QCustomPlot();
-
-    // configure right and top axis to show ticks but no labels:
-    // (see QCPAxisRect::setupFullAxesBox for a quicker method to do this)
-    custom_plot->xAxis2->setVisible(true);
-    custom_plot->xAxis2->setTickLabels(false);
-    custom_plot->yAxis2->setVisible(true);
-    custom_plot->yAxis2->setTickLabels(false);
-
-    // make left and bottom axes always transfer their ranges to right and top axes:
-    QObject::connect(custom_plot->xAxis, SIGNAL(rangeChanged(QCPRange)), custom_plot->xAxis2, SLOT(setRange(QCPRange)));
-    QObject::connect(custom_plot->yAxis, SIGNAL(rangeChanged(QCPRange)), custom_plot->yAxis2, SLOT(setRange(QCPRange)));
-}
-
-void add_diffusion_plot(const GentlesmanBattleModel& model)
-{
-    // add two new graphs and set their look:
-    static int graph_index = 0;
-    custom_plot->addGraph();
-    int graph_color = qBound(0, 255, 255 - graph_index * 30);
-    custom_plot->graph(graph_index)->setPen(QPen(QColor(0, 0, graph_color)));
-
-    // custom_plot->graph(graph_index)->setBrush(QBrush(QColor(0, 0, 255, 20))); // first graph will be filled with translucent blue
-
-    //
-    // Convert model data to QCustomPlot format (QVector)
-    //
-
-    // Generate y-axis10
-    QVector<double> y_axis = QVector<double>::fromStdVector(model.info.new_ammo_amount);
-
-    // Generate x-axis    
-    QVector<double> x_axis(y_axis.size());
-    for(int i = 0; i < x_axis.size(); ++i)
-    {
-        x_axis[i] = i;
-    }
-
-    // pass data points to graphs:
-    custom_plot->graph(graph_index)->setData(x_axis, y_axis);
-    // let the ranges scale themselves so graph 0 fits perfectly in the visible area:
-    custom_plot->graph(graph_index)->rescaleAxes();
-
-    custom_plot->axisRect(0)->setRangeZoom(Qt::Vertical);
-
-    graph_index++;
-}
-
-void show_plot()
-{
-    // Note: we could have also just called custom_plot->rescaleAxes(); instead
-    // Allow user to drag axis rainfonges with mouse, zoom with mouse wheel and select graphs by clicking:
-    custom_plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-
-    custom_plot->setGeometry(20, 20, 800, 800);
-    custom_plot->show();
-}
-
-int main(int argc, char *argv[])
-{
-    QApplication app(argc, argv);
-
     GentlesmanBattleModel model;
-
-    // TODO: Organize this functions "init_plot(), add_diffusion_plot(), show_plot() in an object to handle this
-    init_plot();
-
-    model.step_callback = [&]()
-    {
-        static int num_plots = 0;
-        if(num_plots < 1000)
-        {
-            if((model.iteration) % 100 == 0)
-            {
-                add_diffusion_plot(model);
-                num_plots++;
-            }
-        }
-    };
-
-    show_plot();
-
     model.run();
-
     model.output.stop_execution();
-
-    return app.exec();
+    return EXIT_SUCCESS;
 }
 

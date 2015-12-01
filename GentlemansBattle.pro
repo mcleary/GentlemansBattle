@@ -4,9 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets printsupport
+QT       += core
 
-#QT       -= gui
+QT       -= gui
 
 TARGET = GentlemansBattle
 CONFIG   += console
@@ -17,8 +17,6 @@ TEMPLATE = app
 
 
 SOURCES += \
-    src/main.cpp \
-    src/qcustomplot.cpp
+    src/main.cpp
 
 HEADERS += \
-    src/qcustomplot.h
