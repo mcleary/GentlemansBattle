@@ -22,4 +22,5 @@ SOURCES += \
 HEADERS += \
 
 DISTFILES += \
-    .gitignore
+    .gitignore \
+    report/gentlemans_battle_report.tex
