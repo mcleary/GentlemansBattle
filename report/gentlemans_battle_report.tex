@@ -21,7 +21,7 @@
 %	DOCUMENT INFORMATION
 %----------------------------------------------------------------------------------------
 
-\title{Um Modelo Matemático para Batalhas de Exércitos de Cavalheiros} % Title
+\title{Um Modelo Matemático para Análise de Batalhas Históricas considerando Munição Limitada} % Title
 
 \author{Thales Luis Rodrigues Sabino} % Author name
 
@@ -59,7 +59,9 @@ Fica claro que conflitos, armados ou não, sempre fizeram parte da história da 
 
 Não faz parte do escopo deste trabalho a realização de uma discussão sobre os aspectos positivos, negativos e impactos sociais causados por conflitos, somente uma análise de um modelo  matemático que tenta capturar os aspectos de um conflito armado entre dois exércitos homogêneos.
 
-Esse tipo de modelo matemático foi inicialmente desenvolvido por Frederick W. Lanchester (1914) (Figura \ref{fig:fw-lanchester}), um engenheiro britânico que que desenvolveu a teoria dos combates baseado em conflitos aéreos da Primeira Guerra Mundial na tentativa de explicar porque a concentração de forças era útil em combates modernos. As \textit{leis} de Lanchester são ensinadas e usadas em todos os colégios militares do mundo.
+\subsection{Modelos de Combate do Tipo Lanchester}
+
+A análise de combates do ponto de vista matemático foi inicialmente desenvolvido por Frederick W. Lanchester (1914) (Figura \ref{fig:fw-lanchester}), um engenheiro britânico que que desenvolveu a teoria dos combates baseado em conflitos aéreos da Primeira Guerra Mundial na tentativa de explicar porque a concentração de forças era útil em combates modernos. As \textit{leis} de Lanchester são ensinadas e usadas em todos os colégios militares do mundo.
 
 \begin{figure}[ht]
 	\centering
@@ -70,6 +72,34 @@ Esse tipo de modelo matemático foi inicialmente desenvolvido por Frederick W. L
 
 Existem dois tipos de modelos a serem considerados, \textbf{homogêneos} e \textbf{heterogêneos}. No modelo homogêneo, um único escalar é utilizado para representar o poder de combate de uma unidade e ambos os lados do conflito são considerados equivalentes quanto a eficiência em combate. O modelo homogêneo pode ser considerado de cunho \textit{acadêmico} e é aplicado na análise e revisão de \textit{batalhas históricos}, não sendo considerado um bom modelo para descrição de \textit{combates modernos}.
 
+\subsection{Batalhas Históricas}
+
+Não foi considerada nenhuma batalha específica no desenvolvimento deste trabalho, somente a forma como as batalhas eram efetuadas.
+
+Antes da Primeira Guerra Mundial, conhecida como guerra das trincheiras, as batalhas entre dois países que estavam em guerra tinham um formato bem diferente dos combates modernos. As batalhas, normalmente, tinham um local e data pré-definidos, onde das duas forças se encontravam e faziam a disputa. A força que conseguisse incapacitar a maior parte da força do adversário era considerada a vencedora. Nesse tipo de conflito, os dois exércitos praticamente se alinhavam um de frente para o outro, em uma formação, normalmente em linha ou retangular até que fosse ordenado o ataque. A linha de frente de cada exército ia sendo substituída a medida que os soldados iam ficando sem munição ou era atingidos. 
+
+A \textbf{Batalha de Gettysburg} (Figura \ref{fig:gettysburg-battle}) é uma batalha famosa da Guerra Civil Americana conhecida por ser a batalha com maior número de vítimas de tal guerra. O \textbf{Assalto de Pickett} (\ref{fig:picketts-charge}) foi o famoso assalto da infantaria Confederada ordenada pelo Gal. Robert E. Lee, em 3 de Julho de 1863, durante a Batalha de Gettsburg. No entanto, esse assalto foi repelido com um grande número de baixas e decisão a favor da União.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.9\linewidth]{figs/edwin_forbes_picketts_charge_1420x654.jpg}
+	\caption{O Assalto de Pickett de uma posição na linha dos Confederados olhando para as linhas da União. Pintura de Edwin Forbes.}
+	\label{fig:picketts-charge}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\linewidth]{figs/Battle_of_Gettysburg_1200x870.jpg}
+	\caption{Pintura da Batalha de Gettysburg}
+	\label{fig:gettysburg-battle}	
+\end{figure}
+
+As \textbf{Equações de Lanchester} foram utilizas para modelar esse conflito e, portanto, representam um modelo válido para o estudo de conflitos clássicos.
+
+O modelo matemático apresentado neste trabalho foi ligeiramente baseado no modelo de forças homogêneas de Lanchester, porém foi considerado que a munição disponível na linha de frente é limitada e deve ser reposta. Para modelar a reposição da munição na linha de frente foi utilizado o processo de difusão, onde a munição deve sair da retaguarda até chegar na linha de frente onde pode ser utilizada contra o exército inimigo.
+
+\section{Objetivo}
+
 O objetivo deste trabalho é o desenvolvimento e análise de um modelo matemático capaz de representar o embate entre duas forças homogêneas, porém com munição disponível limitada. 
 
 \section{Modelo Matemático}
@@ -77,6 +107,10 @@ O objetivo deste trabalho é o desenvolvimento e análise de um modelo matemáti
 \subsection{Dados de Entrada}
 
 \section{Análise do Modelo}
+
+\section{Resultados}
+
+\section{Conclusão}
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
