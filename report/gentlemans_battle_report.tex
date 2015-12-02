@@ -11,6 +11,7 @@
 \usepackage[a4paper, margin=4cm]{geometry}
 \usepackage{url}
 \usepackage{indentfirst}
+\usepackage{mathtools}
 
 \setlength{\parindent}{4em}
 \setlength{\parskip}{0.5em}
@@ -70,7 +71,7 @@ A análise de combates do ponto de vista matemático foi inicialmente desenvolvi
 	\label{fig:fw-lanchester}
 \end{figure}
 
-Existem dois tipos de modelos a serem considerados, \textbf{homogêneos} e \textbf{heterogêneos}. No modelo homogêneo, um único escalar é utilizado para representar o poder de combate de uma unidade e ambos os lados do conflito são considerados equivalentes quanto a eficiência em combate. O modelo homogêneo pode ser considerado de cunho \textit{acadêmico} e é aplicado na análise e revisão de \textit{batalhas históricos}, não sendo considerado um bom modelo para descrição de \textit{combates modernos}.
+Existem dois tipos de modelos a serem considerados, \textbf{homogêneos} e \textbf{heterogêneos}. No modelo homogêneo, um único escalar é utilizado para representar o poder de combate de uma unidade e ambos os lados do conflito são considerados equivalentes quanto a eficiência em combate. O modelo homogêneo pode ser considerado de cunho \textit{acadêmico} e é aplicado na análise e revisão de \textit{batalhas históricos}, não sendo considerado um bom modelo para descrição de \textit{combates modernos} \cite{giordana03first}.
 
 \subsection{Batalhas Históricas}
 
@@ -100,9 +101,88 @@ O modelo matemático apresentado neste trabalho foi ligeiramente baseado no mode
 
 \section{Objetivo}
 
-O objetivo deste trabalho é o desenvolvimento e análise de um modelo matemático capaz de representar o embate entre duas forças homogêneas, porém com munição disponível limitada. 
+O objetivo deste trabalho é o desenvolvimento e análise de um modelo matemático capaz de representar o embate entre duas forças homogêneas, porém com munição disponível limitada na linha de frente. 
 
-\section{Modelo Matemático}
+O modelo proposto foi baseado no modelo de Lanchester porém foram acrescentados outros parâmetros de forma a a permitir um controle mais refinado do desenrolar da batalha. 
+
+\section{Modelo Matemático de Batalhas Históricas}
+
+Considere o embate entre duas forças homogêneas no contexto de uma batalha histórica, onde os exércitos se alinham um de frente para o outro em formação e mantém a posição atirando e substituindo a linha de frente a medida que esta é atingida pelo inimigo. Para o desenvolvimento do modelo, será considerado a força $E$ (o exército sob comando) e a $I$ (o exército inimigo). É desejável saber em que condições o exército $E$ irá vencer ou perder a batalha. Outras perguntas se deseja responder são: Como o número de soldados irá cair com o tempo na batalha? Quantos sobreviventes o vencedor terá? O quanto a eficiência do exército é importante para garantir a vitória na batalha?
+
+\subsection{Modelagem de Formação de Batalha}
+
+Seja $E(t)$ e $I(t)$ as respectivas forças do exército e do inimigo. A taxa de variação do exército pode ser modelada da seguinte forma:
+
+\begin{equation}
+	\frac{dE}{dt} = -k_1 \alpha E(t) \beta I(t)
+	\label{eq:army}
+\end{equation}
+onde $0 < k_1 \leq 1$ é a constante que mede a eficiência do inimigo e $0 < \alpha,\beta \leq 1$ é a porcentagem do exército que irá compor as linhas de frente do exército e do inimigo em um dado momento. A Equação \ref{eq:army} pode ser resumida como a modelagem da batalha das duas linhas de frente por unidade de tempo.
+
+De maneira análoga, a taxa com que o exército inimigo é cai é modelada como o encontro das duas linhas de frente:
+
+\begin{equation}
+	\frac{dI(t)}{dt} = -k_2 \rho \mu(t,L) \alpha E(t) \beta I(t)
+	\label{eq:enemy}
+\end{equation}
+onde  $0 < k_2 \leq 1$ é a constante que mede a eficiência do exército em relação ao inimigo $0 \leq \rho \leq 1$ é a taxa de disparos que o exército consegue efetuar e $\mu(t,L)$ é a quantidade de munição disponível na linha de frente no instante de tempo $t$. $L > 0$ é a extensão da formação. Quanto maior for $L$ mais espaçado estarão os soldados relativos a linha de frente e mais tempo levará para a munição chegar na linha de frente.
+
+A difusão da munição é modelada pela equação de difusão em 1D:
+
+\begin{equation}
+	\frac{\partial \mu (t,x)}{\partial t} = D \frac{\partial^2 \mu (t,x) }{\partial x^2}
+\end{equation}
+onde $0 < x \leq L$ e $D > 0$ é o coeficiente de difusão da munição pelo exército.
+
+\subsection{Condições Iniciais e de Contorno}
+Após a escolha dos parâmetros da batalha, as condições iniciais dizem respeito somente ao contingente inicial de cada exército e a quantidade de munição presente na retaguarda do exército no tempo $t = 0$:
+
+\begin{eqnarray}
+	E(0) &=& \Upsilon \\
+	I(0) &=& \Phi \nonumber \\
+	\mu(0,0) &=& \Delta \nonumber
+	\label{eq:initial-cond}
+\end{eqnarray}
+onde $\Upsilon, \Phi, \Delta > 0$.
+
+Para as condições de contorno é importante notar que na retaguarda $x=0$ não há fluxo de munição, porém na linha de frente a munição é utilizada a uma taxa proporcional a taxa de disparos que o exército consegue efetuar, logo:
+
+\begin{eqnarray}
+	\nabla \mu(t,L) \cdot \eta(x) &=& -\frac{\rho \mu(t,L)}{D \alpha E(t)} \\
+	\nabla \mu(t,0) \cdot \eta(x) &=& 0 \nonumber
+\end{eqnarray}
+
+\subsection{Discretização por Diferenças Finitas}
+
+Para solucionar o modelo, foi escolhido o método de diferenças finitas explicito para solução numérica das equações diferenciais que fazem parte do modelo.
+
+Para as Equações \ref{eq:army} e \ref{eq:enemy} foi escolhida o esquema para frente no tempo, logo a discretização por diferenças finitas para a Equação \ref{eq:army} é dada por:
+
+\begin{equation}
+	\frac{dE}{dt} = \frac{E^{t+1} - E^t}{\Delta t} = -k_1 \alpha E(t) \beta I(t)
+\end{equation}
+isolando o termo $E^{t+1}$ tem-se:
+
+\begin{equation}
+	E^{t+1} = E^t - \Delta t \left[k_1 \alpha E(t) \beta I(t) \right]
+\end{equation}
+
+De forma análoga, a discretização da Equação \ref{eq:enemy} é:
+
+\begin{equation}
+	I^{t+1} = I^{t} - \Delta t \left[ k_2 \rho \mu(t,L) \alpha E(t) \beta I(t) \right]
+\end{equation}
+
+Para a discretização da equação de difusão foi escolhido o esquema de diferenças centras no espaço e para frente no tempo, logo:
+
+\begin{equation}
+	\frac{\partial \mu}{\partial t} = \frac{\mu_{t+1}^{i} - \mu_i^t}{\Delta t} = D \left( \frac{\mu_{i-1}^t - 2\mu_i^t + \mu_{i+2}^{t}}{( \Delta x)^2 } \right)
+\end{equation}
+isolando o termo $\mu_{i+1}^t$ tem-se:
+
+\begin{equation}
+	\mu_{i+1}^t = \mu_i^t + \frac{D \Delta t}{(\Delta x)^2} \left( \mu_{i-1}^t - 2\mu_i^t + \mu_{i+2}^{t}  \right)
+\end{equation}
 
 \subsection{Dados de Entrada}
 
