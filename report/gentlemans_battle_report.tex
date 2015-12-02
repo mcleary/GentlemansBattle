@@ -1,40 +1,21 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% University/School Laboratory Report
-% LaTeX Template
-% Version 3.1 (25/3/14)
-%
-% This template has been downloaded from:
-% http://www.LaTeXTemplates.com
-%
-% Original author:
-% Linux and Unix Users Group at Virginia Tech Wiki 
-% (https://vtluug.org/wiki/Example_LaTeX_chem_lab_report)
-%
-% License:
-% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
 \documentclass{article}
 
-\usepackage[version=3]{mhchem} % Package for chemical equation typesetting
 \usepackage[brazilian]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{siunitx} % Provides the \SI{}{} and \si{} command for typesetting SI units
 \usepackage{graphicx} % Required for the inclusion of images
-\usepackage{natbib} % Required to change bibliography style to APA
-\usepackage{amsmath} % Required for some math elements 
+\usepackage[a4paper, margin=4cm]{geometry}
+\usepackage{url}
+\usepackage{indentfirst}
 
-\setlength\parindent{0pt} % Removes all indentation from paragraphs
+\setlength{\parindent}{4em}
+\setlength{\parskip}{0.5em}
 
-\renewcommand{\labelenumi}{\alph{enumi}.} % Make numbering in the enumerate environment by letter rather than number (e.g. section 6)
-
-%\usepackage{times} % Uncomment to use the Times New Roman font
+%\setlength\parindent{0pt} % Removes all indentation from paragraphs
 
 %----------------------------------------------------------------------------------------
 %	DOCUMENT INFORMATION
@@ -51,9 +32,12 @@
 \maketitle % Insert the title, author and date
 
 \begin{center}
-\begin{tabular}{l r}
-Professor: & Rodrigo Weber dos Santos % Instructor/supervisor
-\end{tabular}
+Relatório técnico do trabalho realizado na disciplina \textit{Instrução a Modelagem Matemática (2015-3)} do \textbf{Programa de Pós-Graduação em Modelagem Computacional (PGMC)} \textbf{da Universidade Federal de Juiz de Fora (UFJF)}.
+\end{center}
+
+
+\begin{center}
+\textbf{Professor:} Rodrigo Weber dos Santos
 \end{center}
 
 % If you wish to include an abstract, uncomment the lines below
@@ -67,7 +51,26 @@ Abstract text
 
 \section{Introdução}
 
-\section{Objetivos}
+Descoberta no século 19 na antiga Suméria, a cidade-estado de Lagash possui ruínas que contém registros que mostram vários aspectos da guerra travada com uma cidade-estado vizinha conhecida como Umma. Nas ruínas foram encontradas representações de soldados sendo devorados por abutres. A relíquia, hoje, encontra-se exposta no Museu do Louvre, em Paris \cite{firstwar}.
+
+Fica claro que conflitos, armados ou não, sempre fizeram parte da história da humanidade. O orçamento dedicado a defesa de vários países corresponde a uma parte significativa do PIB gerado, tornando o aspecto bélico de extrema importância para a defesa e segurança de um país (procurar referência).
+
+É evidente que uma parte significa do dinheiro investido nas forças militares é dedicada ao estudo de situações de combate, estratégias e maneiras eficientes de vencer as batalhas. O termo eficiente, nesse contexto, significa derrotar o inimigo sofrendo um número mínimo de baixas. 
+
+Não faz parte do escopo deste trabalho a realização de uma discussão sobre os aspectos positivos, negativos e impactos sociais causados por conflitos, somente uma análise de um modelo  matemático que tenta capturar os aspectos de um conflito armado entre dois exércitos homogêneos.
+
+Esse tipo de modelo matemático foi inicialmente desenvolvido por Frederick W. Lanchester (1914) (Figura \ref{fig:fw-lanchester}), um engenheiro britânico que que desenvolveu a teoria dos combates baseado em conflitos aéreos da Primeira Guerra Mundial na tentativa de explicar porque a concentração de forças era útil em combates modernos. As \textit{leis} de Lanchester são ensinadas e usadas em todos os colégios militares do mundo.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.3\linewidth]{figs/fw_lanchester_693x1024.jpg}
+	\caption{Frederick Willian Lanchester}
+	\label{fig:fw-lanchester}
+\end{figure}
+
+Existem dois tipos de modelos a serem considerados, \textbf{homogêneos} e \textbf{heterogêneos}. No modelo homogêneo, um único escalar é utilizado para representar o poder de combate de uma unidade e ambos os lados do conflito são considerados equivalentes quanto a eficiência em combate. O modelo homogêneo pode ser considerado de cunho \textit{acadêmico} e é aplicado na análise e revisão de \textit{batalhas históricos}, não sendo considerado um bom modelo para descrição de \textit{combates modernos}.
+
+O objetivo deste trabalho é o desenvolvimento e análise de um modelo matemático capaz de representar o embate entre duas forças homogêneas, porém com munição disponível limitada. 
 
 \section{Modelo Matemático}
 
@@ -75,15 +78,11 @@ Abstract text
 
 \section{Análise do Modelo}
 
-\cite{Smith:2012qr}
-
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 
-\bibliographystyle{apalike}
-%\bibliographystyle{acm}
-
+\bibliographystyle{acm}
 \bibliography{references}
 
 %----------------------------------------------------------------------------------------
