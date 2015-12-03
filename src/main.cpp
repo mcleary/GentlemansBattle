@@ -25,17 +25,17 @@ struct ModelInputData
      */
     ModelInputData()
     {
-        start_army_size             = 1000.0;
-        start_enemy_size            = 1000.0;
-        loose_battle_fraction       = 0.05;
-        army_skill                  = 0.05;
-        enemy_skill                 = 0.01;
-        start_ammo                  = 200;
-        army_fire_rate              = 0.01;
+        start_army_size             = 500.0;
+        start_enemy_size            = 500.0;
+        loose_battle_fraction       = 0.01;
+        army_skill                  = 0.03;
+        enemy_skill                 = 0.03;
+        start_ammo                  = 950;
+        army_fire_rate              = 0.05;
         ammo_diffusion_coeffient    = 1.0;
-        formation_size              = 10;
+        formation_size              = 7;
         front_line_fraction         = 0.1;
-        enemy_front_line_fraction   = 0.1;
+        enemy_front_line_fraction   = 1.0;
 
         delta_time                  = 0.07;
         delta_x                     = 0.6;
@@ -230,7 +230,9 @@ struct ModelOutput
             std::string output_filename_quotes = "'" + model_output_filename + "'";
             std::string plot_command = "gnuplot -p -e \"plot " +
                     output_filename_quotes + " using 1:2 with lines title 'Army'," +
-                    output_filename_quotes + " using 1:3 with lines title 'Enemies'" +
+                    output_filename_quotes + " using 1:3 with lines title 'Enemies'," +
+                    output_filename_quotes + "using 1:4 with lines title 'Ammo at rearguard'," +
+                    output_filename_quotes + "using 1:5 with lines title 'Ammo at frontline'" +
                     "\"";
             std::cout << plot_command << std::endl;
 
@@ -242,7 +244,7 @@ struct ModelOutput
                     output_filename_quotes + "using 1:4 with lines title 'Ammo at rearguard'," +
                     output_filename_quotes + "using 1:5 with lines title 'Ammo at frontline'" +
                     "\"";
-            system(plot_command.data());
+//            system(plot_command.data());
             std::cout << plot_command << std::endl;
         }
     }
