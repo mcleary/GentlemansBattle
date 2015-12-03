@@ -231,30 +231,31 @@ struct ModelOutput
             std::string output_filename_quotes = "'" + model_output_filename + "'";
             std::string gnuplot_script_filename = "_gentlemans_battle.gnu";
 
-            std::fstream gnuplot_script_file(gnuplot_script_filename, std::ios::out);
+            {
+                std::fstream gnuplot_script_file(gnuplot_script_filename, std::ios::out);
 
-            gnuplot_script_file << "set xlabel 'Time'" << std::endl;
-            gnuplot_script_file << "set ylabel";
-
-            std::string plot_command = "gnuplot -p -e \"plot " +
-                    output_filename_quotes + " using 1:2 with lines title 'Army'," +
-                    output_filename_quotes + " using 1:3 with lines title 'Enemies'," +
-                    output_filename_quotes + "using 1:4 with lines title 'Ammo at rearguard'," +
-                    output_filename_quotes + "using 1:5 with lines title 'Ammo at frontline'" +
-                    "\"";
-
-            std::cout << plot_command << std::endl;
+                gnuplot_script_file << "set terminal 'wxt'" << std::endl;
+                gnuplot_script_file << "set xlabel 'Tempo'" << std::endl;
+                gnuplot_script_file << "set ylabel 'Número de Soldados'" << std::endl;
+                gnuplot_script_file << "set zeroaxis" << std::endl;
+                gnuplot_script_file << "set title 'Evolução do Número de Soldados no Campo de Batalha'" << std::endl;
+                gnuplot_script_file << "plot " <<
+                        output_filename_quotes << " using 1:2 with lines title 'Soldados'," +
+                        output_filename_quotes << " using 1:3 with lines title 'Inimigos'";
+            }
 
             // show reaction plot
+            std::string plot_command = "gnuplot -p " + gnuplot_script_filename;
+            std::cout << plot_command << std::endl;
             system(plot_command.data());
 
             // show diffusion plot
-            plot_command = "gnuplot -p -e \"plot " +
-                    output_filename_quotes + "using 1:4 with lines title 'Ammo at rearguard'," +
-                    output_filename_quotes + "using 1:5 with lines title 'Ammo at frontline'" +
-                    "\"";
-//            system(plot_command.data());
-            std::cout << plot_command << std::endl;
+//            plot_command = "gnuplot -p -e \"plot " +
+//                    output_filename_quotes + "using 1:4 with lines title 'Ammo at rearguard'," +
+//                    output_filename_quotes + "using 1:5 with lines title 'Ammo at frontline'" +
+//                    "\"";
+////            system(plot_command.data());
+//            std::cout << plot_command << std::endl;
         }
     }
 };
