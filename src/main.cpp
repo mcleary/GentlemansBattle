@@ -109,8 +109,8 @@ struct ModelInfo
 
         // Enemy
         double shoots_fired = old_ammo_amount.back() * model_input.army_fire_rate;
-        old_enemy_size = new_enemy_size;
         new_enemy_size = old_enemy_size - model_input.delta_time * model_input.army_skill * shoots_fired * front_line_size * enemy_front_line_size;
+        old_enemy_size = new_enemy_size;
 
         // Ammo Diffusion        
         for(size_t i = 1; i < new_ammo_amount.size() - 1; ++i)
