@@ -30,13 +30,13 @@ struct ModelInputData
         start_enemy_size            = 500.0;
         loose_battle_fraction       = 0.01;
         army_skill                  = 0.03;
-        enemy_skill                 = 0.03;
+        enemy_skill                 = 0.01;
         start_ammo                  = 1000;
         army_fire_rate              = 0.05;
-        ammo_diffusion_coeffient    = 1.0;
+        ammo_diffusion_coeffient    = 0.8;
         formation_size              = 7;
         front_line_fraction         = 0.1;
-        enemy_front_line_fraction   = 1.0;
+        enemy_front_line_fraction   = 0.1;
 
         delta_time                  = 0.07;
         delta_x                     = 0.6;
@@ -229,33 +229,46 @@ struct ModelOutput
         if(b_show_gnuplot)
         {
             std::string output_filename_quotes = "'" + model_output_filename + "'";
-            std::string gnuplot_script_filename = "_gentlemans_battle.gnu";
+            std::string gnuplot_reaction_script = "_gentlemans_battle.gnu";
+            std::string gnuplot_diffusion_script = "_gentlemans_battle_diffusion.gnu";
 
             {
-                std::fstream gnuplot_script_file(gnuplot_script_filename, std::ios::out);
+                std::fstream gnuplot_script_file(gnuplot_reaction_script, std::ios::out);
 
                 gnuplot_script_file << "set terminal 'wxt'" << std::endl;
                 gnuplot_script_file << "set xlabel 'Tempo'" << std::endl;
                 gnuplot_script_file << "set ylabel 'Número de Soldados'" << std::endl;
                 gnuplot_script_file << "set zeroaxis" << std::endl;
+                gnuplot_script_file << "set yrange [0:550]" << std::endl;
                 gnuplot_script_file << "set title 'Evolução do Número de Soldados no Campo de Batalha'" << std::endl;
                 gnuplot_script_file << "plot " <<
-                        output_filename_quotes << " using 1:2 with lines title 'Soldados'," +
-                        output_filename_quotes << " using 1:3 with lines title 'Inimigos'";
+                                       output_filename_quotes << " using 1:2 with lines title 'Soldados'," <<
+                                       output_filename_quotes << " using 1:3 with lines title 'Inimigos'" << std::endl;
+
+            }
+            {
+                std::fstream gnuplot_script_file(gnuplot_diffusion_script, std::ios::out);
+
+                gnuplot_script_file << "set terminal 'wxt'" << std::endl;
+                gnuplot_script_file << "set xlabel 'Tempo'" << std::endl;
+                gnuplot_script_file << "set ylabel 'Concentração de Munição'" << std::endl;
+                gnuplot_script_file << "set zeroaxis" << std::endl;
+
+                gnuplot_script_file << "set title 'Munição nas linhas de frente e retarguarda'" << std::endl;
+                gnuplot_script_file << "plot " <<
+                                       output_filename_quotes << " using 1:4 with lines title 'Retarguarda'," <<
+                                       output_filename_quotes << " using 1:5 with lines title 'Linha de frente'" << std::endl;
             }
 
             // show reaction plot
-            std::string plot_command = "gnuplot -p " + gnuplot_script_filename;
+            std::string plot_command = "gnuplot -p " + gnuplot_reaction_script;
             std::cout << plot_command << std::endl;
             system(plot_command.data());
 
             // show diffusion plot
-//            plot_command = "gnuplot -p -e \"plot " +
-//                    output_filename_quotes + "using 1:4 with lines title 'Ammo at rearguard'," +
-//                    output_filename_quotes + "using 1:5 with lines title 'Ammo at frontline'" +
-//                    "\"";
-////            system(plot_command.data());
-//            std::cout << plot_command << std::endl;
+            plot_command = "gnuplot -p " + gnuplot_diffusion_script;
+            std::cout << plot_command << std::endl;
+            system(plot_command.data());
         }
     }
 };

@@ -208,13 +208,13 @@ Nesta seção serão apresentados os dados de entradas escolhidos como dados de 
 		\hline
 		$\gamma$ & 0.01 & Fração que deve sobrar no campo de batalha para considerar derrota & $0 < \gamma \leq 1$ \\
 		\hline
-		$k_2$ & 0.03 & Constante que mede o poder de ataque e a eficiência do exército & $0 < k_2 \leq 1$ \\
+		$k_2$ & 0.01 & Constante que mede o poder de ataque e a eficiência do exército & $0 < k_2 \leq 1$ \\
 		\hline
 		$k_1$ & 0.03 & Constante que mede o poder de ataque e a eficiência do inimigo & $0 < k_1 \leq 1$ \\
 		\hline
 		$\rho$ & 0.05 & Medida da taxa de disparos feitas pelo exército por unidade de tempo & $0 < \rho \leq 1$ \\
 		\hline
-		$D$ & 1 & Coeficiente de difusão da munição pelo exército & $D > 0$ \\
+		$D$ & 0.8 & Coeficiente de difusão da munição pelo exército & $D > 0$ \\
 		\hline
 		$L$ & 7 & Tamanho da formação do exército & $L > 0$ \\
 		\hline
@@ -230,7 +230,7 @@ Nesta seção serão apresentados os dados de entradas escolhidos como dados de 
 	\caption{Lista dos valores escolhidos para condição inicial, de contorno e parâmetros do modelo.}
 	\label{tb:input}
 \end{table}
-A Tabela \ref{tb:input} lista todos os valores escolhidos para resolução numérica do modelo das batalhas. Note que a condição CFL $\left(\frac{D\Delta t}{(\Delta x)^2} < 0.194 < 1/2\right)$ foi atendida, logo, para os parâmetros escolhidos, o método explícito não apresenta instabilidades.
+A Tabela \ref{tb:input} lista todos os valores escolhidos para resolução numérica do modelo das batalhas. Note que a condição CFL $\left(\frac{D\Delta t}{(\Delta x)^2} < 0.15 < 1/2\right)$ foi atendida, logo, para os parâmetros escolhidos, o método explícito não apresenta instabilidades.
 
 \section{Análise do Modelo}
 
@@ -238,10 +238,23 @@ A Tabela \ref{tb:input} lista todos os valores escolhidos para resolução numé
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.6]{figs/battle1.png}
-	\caption{}
+	\includegraphics[scale=0.4]{figs/battle1.png}
+	\caption{Resultado da batalha para os dados de entrada da Tabela \ref{tb:input}. Nestas condições o exército sai vitorioso.}
 	\label{fig:battle1}
 \end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{figs/battle1-ammo.png}
+	\caption{Difusão da munição a partir da retaguarda até a linha de frente. Como a munição se concentra totalmente na retaguarda, ela rapidamente chega a linha de frente.}
+	\label{fig:battle1-ammo}
+\end{figure}
+
+A Figura \ref{fig:battle1} mostra o resultado da batalha descrita pelos dados de entrada mostrados na Tabela \ref{tb:input}. É possível ver claramente que a estratégia de manter uma formação compacta, com uma pequena quantidade de soldados na linha-de-frente, é eficiente. É possível ver claramente o momento em que a munição começa a 
+
+A Figura \ref{fig:battle1-ammo} mostra a concentração de munição tanto na retaguarda quando na linha de frente para o exército sendo modelado. Note que, no inicio da batalha, o exército começa sofrente baixas, porém como a linha de frente é relativamente pequena em relação ao número de soldados, as baixas não representam perdas significativas do contingente de soldados. Por volta de $t = 2$, quando a munição começa a chegar na linha de frente, é possível ver uma reviravolta drástica no destino da batalha. Como a perícia e o poder de fogo do exército são maiores em relação ao inimigo, quando a munição fica disponível na linha de frente, a queda no contingente inimigo é significativa levando-os a vitória.
+
+Pode-se argumentar que não ter munição na linha de frente é uma falha do modelo, mas nesse ponto pode-se considerar que a munição presente na linha de frente não é suficiente para causar dano no inimigo, tornando a modelagem válida.
 
 \section{Conclusão}
 
