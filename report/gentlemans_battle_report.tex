@@ -22,7 +22,7 @@
 %	DOCUMENT INFORMATION
 %----------------------------------------------------------------------------------------
 
-\title{Um Modelo Matemático para Análise de Batalhas Históricas considerando Munição Limitada} % Title
+\title{Um Modelo Matemático para Análise de Batalhas Históricas Considerando Munição Limitada} % Title
 
 \author{Thales Luis Rodrigues Sabino} % Author name
 
@@ -167,7 +167,7 @@ isolando o termo $E^{t+1}$ tem-se:
 	E^{t+1} = E^t - \Delta t \left[k_1 \alpha E(t) \beta I(t) \right]
 \end{equation}
 
-De forma análoga, a discretização da Equação \ref{eq:enemy} é:
+De forma análoga, a discretização da Equação \ref{eq:enemy} depois de isolado o termo $I^{t+i}$ é:
 
 \begin{equation}
 	I^{t+1} = I^{t} - \Delta t \left[ k_2 \rho \mu(t,L) \alpha E(t) \beta I(t) \right]
@@ -178,11 +178,12 @@ Para a discretização da equação de difusão foi escolhido o esquema de difer
 \begin{equation}
 	\frac{\partial \mu}{\partial t} = \frac{\mu_{t+1}^{i} - \mu_i^t}{\Delta t} = D \left( \frac{\mu_{i-1}^t - 2\mu_i^t + \mu_{i+2}^{t}}{( \Delta x)^2 } \right)
 \end{equation}
-isolando o termo $\mu_{i+1}^t$ tem-se:
+isolando o termo $\mu_{i+1}^t$ tem-se que:
 
 \begin{equation}
 	\mu_{i+1}^t = \mu_i^t + \frac{D \Delta t}{(\Delta x)^2} \left( \mu_{i-1}^t - 2\mu_i^t + \mu_{i+2}^{t}  \right)
 \end{equation}
+onde $\frac{D\Delta t}{(\Delta x)^2} < \frac{1}{2}$ é a condição CFL do modelo. Portanto, os valores de $D$, $\Delta t$ e $\Delta x$ devem ser escolhidos de forma adequada para não causar instabilidade na solução numérica do modelo.
 
 \subsection{Dados de Entrada}
 
