@@ -228,6 +228,13 @@ struct ModelOutput
         if(b_show_gnuplot)
         {
             std::string output_filename_quotes = "'" + model_output_filename + "'";
+            std::string gnuplot_script_filename = "_gentlemans_battle.gnu";
+
+            std::fstream gnuplot_script_file(gnuplot_script_filename, std::ios::out);
+
+            gnuplot_script_file << "set xlabel 'Time'" << std::endl;
+            gnuplot_script_file << "set ylabel";
+
             std::string plot_command = "gnuplot -p -e \"plot " +
                     output_filename_quotes + " using 1:2 with lines title 'Army'," +
                     output_filename_quotes + " using 1:3 with lines title 'Enemies'," +
