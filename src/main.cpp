@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <vector>
+#include <string>
 
 struct ModelInputData
 {
@@ -86,7 +87,7 @@ struct ModelInfo
         model_input(input_data)
     {
         // Setting up the mesh for the ammo diffusion
-        new_ammo_amount.resize(input_data.formation_size / input_data.delta_x);
+        new_ammo_amount.resize(static_cast<int>(input_data.formation_size / input_data.delta_x));
         old_ammo_amount.resize(new_ammo_amount.size());
 
         // Initial condition
@@ -241,6 +242,7 @@ struct ModelOutput
                     output_filename_quotes + "using 1:4 with lines title 'Ammo at rearguard'," +
                     output_filename_quotes + "using 1:5 with lines title 'Ammo at frontline'" +
                     "\"";
+
             std::cout << plot_command << std::endl;
 
             // show reaction plot
