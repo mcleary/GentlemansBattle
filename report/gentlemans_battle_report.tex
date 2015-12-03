@@ -187,6 +187,47 @@ onde $\frac{D\Delta t}{(\Delta x)^2} < \frac{1}{2}$ é a condição CFL do model
 
 \subsection{Dados de Entrada}
 
+Nesta seção serão apresentados os dados de entradas escolhidos como dados de entradas.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{| l | l | l | l |}
+		\hline
+		\multicolumn{4}{| c |}{Dados de Entrada} \\
+		\hline
+		$\Upsilon$ & 500  & Número inicial de soldados no exército & $\Upsilon > 0$ \\
+		\hline
+		$\Phi$ & 500  & Número inicial de soldados inimigos & $\Phi > 0$ \\
+		\hline
+		$\Delta$ & 1000 & Quantidade inicial de munição na retaguarda & $\Delta > 0$ \\
+		\hline
+		$\gamma$ & 0.01 & Fração que deve sobrar no campo de batalha para considerar derrota & $0 < \gamma \leq 1$ \\
+		\hline
+		$k_2$ & 0.03 & Constante que mede o poder de ataque e a eficiência do exército & $0 < k_2 \leq 1$ \\
+		\hline
+		$k_1$ & 0.03 & Constante que mede o poder de ataque e a eficiência do inimigo & $0 < k_1 \leq 1$ \\
+		\hline
+		$\rho$ & 0.05 & Medida da taxa de disparos feitas pelo exército por unidade de tempo & $0 < \rho \leq 1$ \\
+		\hline
+		$D$ & 1 & Coeficiente de difusão da munição pelo exército & $D > 0$ \\
+		\hline
+		$L$ & 7 & Tamanho da formação do exército & $L > 0$ \\
+		\hline
+		$\alpha$ & 0.1 & Porcentagem do exército que ocupa a linha de frente & $0 < \alpha \leq 1$ \\
+		\hline
+		$\beta$ & 0.1 & Porcentagem do exército inimigo que ocupa a linha de frente & $0 < \beta \leq 1$ \\
+		\hline
+		$\Delta t$ & 0.07 & Discretização temporal & $\Delta t > 0$ \\
+		\hline
+		$\Delta x$ & 0.6 & Discretização espacial & $\Delta x > 0$ \\
+		\hline
+	\end{tabular}
+	\caption{Lista dos valores escolhidos para condição inicial, de contorno e parâmetros do modelo.}
+	\label{tb:input}
+\end{table}
+
+A Tabela \ref{tb:input} lista todos os valores escolhidos para resolução numérica do modelo das batalhas. Note que a condição CFL ($\frac{D\Delta t}{(\Delta x)^2} < 0.194 < 1/2$) foi atendida, logo, para os parâmetros escolhidos, o método explícito não apresenta instabilidades.
+
 \section{Análise do Modelo}
 
 \section{Resultados}

@@ -31,7 +31,7 @@ struct ModelInputData
         loose_battle_fraction       = 0.01;
         army_skill                  = 0.03;
         enemy_skill                 = 0.03;
-        start_ammo                  = 950;
+        start_ammo                  = 1000;
         army_fire_rate              = 0.05;
         ammo_diffusion_coeffient    = 1.0;
         formation_size              = 7;
