@@ -12,6 +12,7 @@
 \usepackage{url}
 \usepackage{indentfirst}
 \usepackage{mathtools}
+\usepackage{tabularx}
 
 \setlength{\parindent}{4em}
 \setlength{\parskip}{0.5em}
@@ -152,6 +153,10 @@ Para as condições de contorno é importante notar que na retaguarda $x=0$ não
 	\nabla \mu(t,0) \cdot \eta(x) &=& 0 \nonumber
 \end{eqnarray}
 
+\subsubsection{Condição para Vitória}
+
+O exército vencedor de uma batalha é aquele que permanece com a maior parte de seus soldados em campo. No modelo proposto, para considerar que um dos exércitos perdeu a batalha, uma fração do número original de soldados deve ser atingida. Um exército é considerado perdedor se essa fração for atingida, declarando rendição ao adversário. Para implementar essa condição um valor $0 < \gamma \leq 1$ é escolhido de forma que se $E < \gamma E(t)$ considera-se derrota para o inimigo e se $I < \gamma I(t)$ considera-se vitória sobre o inimigo.
+
 \subsection{Discretização por Diferenças Finitas}
 
 Para solucionar o modelo, foi escolhido o método de diferenças finitas explicito para solução numérica das equações diferenciais que fazem parte do modelo.
@@ -225,12 +230,18 @@ Nesta seção serão apresentados os dados de entradas escolhidos como dados de 
 	\caption{Lista dos valores escolhidos para condição inicial, de contorno e parâmetros do modelo.}
 	\label{tb:input}
 \end{table}
-
-A Tabela \ref{tb:input} lista todos os valores escolhidos para resolução numérica do modelo das batalhas. Note que a condição CFL ($\frac{D\Delta t}{(\Delta x)^2} < 0.194 < 1/2$) foi atendida, logo, para os parâmetros escolhidos, o método explícito não apresenta instabilidades.
+A Tabela \ref{tb:input} lista todos os valores escolhidos para resolução numérica do modelo das batalhas. Note que a condição CFL $\left(\frac{D\Delta t}{(\Delta x)^2} < 0.194 < 1/2\right)$ foi atendida, logo, para os parâmetros escolhidos, o método explícito não apresenta instabilidades.
 
 \section{Análise do Modelo}
 
 \section{Resultados}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.6]{figs/battle1.png}
+	\caption{}
+	\label{fig:battle1}
+\end{figure}
 
 \section{Conclusão}
 
