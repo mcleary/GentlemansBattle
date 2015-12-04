@@ -276,10 +276,10 @@ struct ModelOutput
                 gnuplot_script_file << "k2 = " << input.army_skill << std::endl;
                 gnuplot_script_file << "alpha = " << input.front_line_fraction << std::endl;
                 gnuplot_script_file << "beta = " << input.enemy_front_line_fraction << std::endl;
-                gnuplot_script_file << "vec_scale = 0.3" << std::endl;
+                gnuplot_script_file << "vec_scale = 0.5" << std::endl;
 
-                gnuplot_script_file << "dEdt(I,E) = -k2 * alpha * E * beta * I" << std::endl;
-                gnuplot_script_file << "dIdt(I,E) = -k1 * alpha * E * beta * I" << std::endl;
+                gnuplot_script_file << "dEdt(I,E) = -k1 * alpha * E * beta * I" << std::endl;
+                gnuplot_script_file << "dIdt(I,E) = -k2 * alpha * E * beta * I" << std::endl;
 
                 gnuplot_script_file << "vx(x,y) = dEdt(x,y) * vec_scale # * (1 / sqrt(dEdt(x,y)**2 + dIdt(x,y)**2))" << std::endl;
                 gnuplot_script_file << "vy(x,y) = dIdt(x,y) * vec_scale # * (1 / sqrt(dEdt(x,y)**2 + dIdt(x,y)**2))" << std::endl;
