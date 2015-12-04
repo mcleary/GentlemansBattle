@@ -245,7 +245,7 @@ struct ModelOutput
                 gnuplot_script_file << "set title 'Evolução do Número de Soldados no Campo de Batalha' font 'arial, " << title_font_size << "'" << std::endl;
                 gnuplot_script_file << "plot " <<
                                        output_filename_quotes << " using 1:2 with lines title 'Soldados'," <<
-                                       output_filename_quotes << " using 1:3 with lines title 'Inimigos'" << std::endl;
+                                       output_filename_quotes << " using 1:3 with lines title 'Inimigos' linetype rgb '#6f99c8'" << std::endl;
                 gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
                 gnuplot_script_file << "replot" << std::endl;
 
@@ -261,7 +261,7 @@ struct ModelOutput
                 gnuplot_script_file << "set title 'Munição nas linhas de frente e retarguarda' font 'arial, " << title_font_size << "'" << std::endl;
                 gnuplot_script_file << "plot " <<
                                        output_filename_quotes << " using 1:4 with lines title 'Retarguarda'," <<
-                                       output_filename_quotes << " using 1:5 with lines title 'Linha de frente'" << std::endl;
+                                       output_filename_quotes << " using 1:5 with lines title 'Linha de frente' linetype rgb '#6f99c8'" << std::endl;
                 gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
                 gnuplot_script_file << "replot" << std::endl;
             }
@@ -278,20 +278,23 @@ struct ModelOutput
                 gnuplot_script_file << "beta = " << input.enemy_front_line_fraction << std::endl;
                 gnuplot_script_file << "vec_scale = 0.3" << std::endl;
 
-                gnuplot_script_file << "dEdt(I,E) = -k1 * alpha * E * beta * I" << std::endl;
-                gnuplot_script_file << "dIdt(I,E) = -k2 * alpha * E * beta * I" << std::endl;
+                gnuplot_script_file << "dEdt(I,E) = -k2 * alpha * E * beta * I" << std::endl;
+                gnuplot_script_file << "dIdt(I,E) = -k1 * alpha * E * beta * I" << std::endl;
 
-                gnuplot_script_file << "vx(x,y) = dIdt(x,y) * vec_scale" << std::endl;
-                gnuplot_script_file << "vy(x,y) = dEdt(x,y) * vec_scale" << std::endl;
+                gnuplot_script_file << "vx(x,y) = dEdt(x,y) * vec_scale # * (1 / sqrt(dEdt(x,y)**2 + dIdt(x,y)**2))" << std::endl;
+                gnuplot_script_file << "vy(x,y) = dIdt(x,y) * vec_scale # * (1 / sqrt(dEdt(x,y)**2 + dIdt(x,y)**2))" << std::endl;
 
                 gnuplot_script_file << "set samples 5" << std::endl;
                 gnuplot_script_file << "set zeroaxis" << std::endl;
 
-                gnuplot_script_file << "set xlabel 'Número de Inimigos - I(t)'" << std::endl;
-                gnuplot_script_file << "set ylabel 'Número de Soldados - E(t)'" << std::endl;
+                gnuplot_script_file << "set xlabel 'Número de Soldados - E(t)'" << std::endl;
+                gnuplot_script_file << "set ylabel 'Número de Inimigos - I(t)'" << std::endl;
                 gnuplot_script_file << "set title 'Plano de Fase' font 'Arial, " << title_font_size << "'" << std::endl;
 
-                gnuplot_script_file << "plot '_gentlemans_battle.dat' u 2:3 with lines title 'Número de Soldados x Inimigos', '++' u 1:2:(vx($1,$2)):(vy($1,$2)) with vectors notitle" << std::endl;
+                gnuplot_script_file << "plot '_gentlemans_battle.dat' u 2:3 with lines title 'Número de Soldados x Inimigos'," <<
+                                       " '++' u 1:2:(vx($1,$2)):(vy($1,$2)) with vectors notitle linetype rgb '#6f99c8'" <<
+                                       std::endl;
+
                 gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
                 gnuplot_script_file << "replot" << std::endl;
             }
