@@ -192,17 +192,16 @@ struct ModelInfo
 
 struct ModelOutput
 {
-    std::string model_output_filename;
     std::fstream output_file;
+    std::fstream phase_plane_file;
     const ModelInfo& model_info;
 
-    ModelOutput(const std::string& prefix, const ModelInfo& _model_info, const ModelInputData& model_input)
-        : model_output_filename(prefix + "_gentlemans_battle.dat"),
-          model_info(_model_info)
+    ModelOutput(const ModelInfo& _model_info, const ModelInputData& model_input)
+        : model_info(_model_info)
     {
-        output_file.open(model_output_filename, std::ios::out);
+        output_file.open("_gentlemans_battle.dat", std::ios::out);
         output_file << model_input << std::endl << std::endl;
-        output_file << "# Time  ArmySize    EnemySize" << std::endl;
+        output_file << "# Time  Army    Enemy   Rearguard   Frontline  " << std::endl;
     }
 
     void write_output_step()
@@ -228,9 +227,12 @@ struct ModelOutput
 
         if(b_show_gnuplot)
         {
-            std::string output_filename_quotes = "'" + model_output_filename + "'";
-            std::string gnuplot_reaction_script = "_gentlemans_battle.gnu";
+            std::string output_filename_quotes = "'_gentlemans_battle.dat'";
+            std::string gnuplot_reaction_script = "_gentlemans_battle_result.gnu";
+            std::string gnuplot_phase_plane_script = "_gentlemans_battle_phase_plane.gnu";
             std::string gnuplot_diffusion_script = "_gentlemans_battle_diffusion.gnu";
+
+            const int title_font_size = 15;
 
             {
                 std::fstream gnuplot_script_file(gnuplot_reaction_script, std::ios::out);
@@ -240,10 +242,12 @@ struct ModelOutput
                 gnuplot_script_file << "set ylabel 'Número de Soldados'" << std::endl;
                 gnuplot_script_file << "set zeroaxis" << std::endl;
                 gnuplot_script_file << "set yrange [0:550]" << std::endl;
-                gnuplot_script_file << "set title 'Evolução do Número de Soldados no Campo de Batalha'" << std::endl;
+                gnuplot_script_file << "set title 'Evolução do Número de Soldados no Campo de Batalha' font 'arial, " << title_font_size << "'" << std::endl;
                 gnuplot_script_file << "plot " <<
                                        output_filename_quotes << " using 1:2 with lines title 'Soldados'," <<
                                        output_filename_quotes << " using 1:3 with lines title 'Inimigos'" << std::endl;
+                gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
+                gnuplot_script_file << "replot" << std::endl;
 
             }
             {
@@ -254,19 +258,56 @@ struct ModelOutput
                 gnuplot_script_file << "set ylabel 'Concentração de Munição'" << std::endl;
                 gnuplot_script_file << "set zeroaxis" << std::endl;
 
-                gnuplot_script_file << "set title 'Munição nas linhas de frente e retarguarda'" << std::endl;
+                gnuplot_script_file << "set title 'Munição nas linhas de frente e retarguarda' font 'arial, " << title_font_size << "'" << std::endl;
                 gnuplot_script_file << "plot " <<
                                        output_filename_quotes << " using 1:4 with lines title 'Retarguarda'," <<
                                        output_filename_quotes << " using 1:5 with lines title 'Linha de frente'" << std::endl;
+                gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
+                gnuplot_script_file << "replot" << std::endl;
+            }
+            {
+                const ModelInputData& input = model_info.model_input;
+
+                std::fstream gnuplot_script_file(gnuplot_phase_plane_script, std::ios::out);
+
+                gnuplot_script_file << "set terminal 'wxt'" << std::endl;
+
+                gnuplot_script_file << "k1 = " << input.enemy_skill << std::endl;
+                gnuplot_script_file << "k2 = " << input.army_skill << std::endl;
+                gnuplot_script_file << "alpha = " << input.front_line_fraction << std::endl;
+                gnuplot_script_file << "beta = " << input.enemy_front_line_fraction << std::endl;
+                gnuplot_script_file << "vec_scale = 0.3" << std::endl;
+
+                gnuplot_script_file << "dEdt(I,E) = -k1 * alpha * E * beta * I" << std::endl;
+                gnuplot_script_file << "dIdt(I,E) = -k2 * alpha * E * beta * I" << std::endl;
+
+                gnuplot_script_file << "vx(x,y) = dIdt(x,y) * vec_scale" << std::endl;
+                gnuplot_script_file << "vy(x,y) = dEdt(x,y) * vec_scale" << std::endl;
+
+                gnuplot_script_file << "set samples 5" << std::endl;
+                gnuplot_script_file << "set zeroaxis" << std::endl;
+
+                gnuplot_script_file << "set xlabel 'Número de Inimigos - I(t)'" << std::endl;
+                gnuplot_script_file << "set ylabel 'Número de Soldados - E(t)'" << std::endl;
+                gnuplot_script_file << "set title 'Plano de Fase' font 'Arial, " << title_font_size << "'" << std::endl;
+
+                gnuplot_script_file << "plot '_gentlemans_battle.dat' u 2:3 with lines title 'Número de Soldados x Inimigos', '++' u 1:2:(vx($1,$2)):(vy($1,$2)) with vectors notitle" << std::endl;
+                gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
+                gnuplot_script_file << "replot" << std::endl;
             }
 
             // show reaction plot
-            std::string plot_command = "gnuplot -p " + gnuplot_reaction_script;
+            std::string plot_command = "gnuplot -p " + gnuplot_reaction_script + " > battle_reaction.png";
             std::cout << plot_command << std::endl;
             system(plot_command.data());
 
             // show diffusion plot
-            plot_command = "gnuplot -p " + gnuplot_diffusion_script;
+            plot_command = "gnuplot -p " + gnuplot_diffusion_script + " > battle_ammo_diffusion.png";
+            std::cout << plot_command << std::endl;
+            system(plot_command.data());
+
+            // show phase plane plot
+            plot_command = "gnuplot -p " + gnuplot_phase_plane_script + " > battle_phase_plane.png";
             std::cout << plot_command << std::endl;
             system(plot_command.data());
         }
@@ -280,7 +321,7 @@ struct GentlesmanBattleModel
     ModelInfo info;
 
     GentlesmanBattleModel() :
-        output("", info, input), info(input)
+        output(info, input), info(input)
     {
     }
 

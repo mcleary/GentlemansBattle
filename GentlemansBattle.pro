@@ -23,4 +23,6 @@ HEADERS += \
 
 DISTFILES += \
     .gitignore \
-    report/gentlemans_battle_report.tex
+    report/gentlemans_battle_report.tex \
+    src/phase_plane.py \
+    src/ploter.py

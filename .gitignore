@@ -40,4 +40,6 @@ Makefile*
 *.blg
 *.log
 *.synctex.gz
+report/figs/*.dat
+report/figs/*.gnu
 
