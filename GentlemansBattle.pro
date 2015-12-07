@@ -27,6 +27,7 @@ DISTFILES += \
 OTHER_FILES += \
     nullclines.gnu \
     nullclines.dat \
+    condenser.gnu \
     report/gentlemans_battle_report.tex \
-    src/phase_plane.py \
-    src/ploter.py
+
+
