@@ -246,6 +246,7 @@ struct ModelOutput
                 gnuplot_script_file << "plot " <<
                                        output_filename_quotes << " using 1:2 with lines title 'Soldados'," <<
                                        output_filename_quotes << " using 1:3 with lines title 'Inimigos' linetype rgb '#6f99c8'" << std::endl;
+                gnuplot_script_file << "set output 'report/figs/battle_reaction.png'" << std::endl;
                 gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
                 gnuplot_script_file << "replot" << std::endl;
 
@@ -262,6 +263,7 @@ struct ModelOutput
                 gnuplot_script_file << "plot " <<
                                        output_filename_quotes << " using 1:4 with lines title 'Retarguarda'," <<
                                        output_filename_quotes << " using 1:5 with lines title 'Linha de frente' linetype rgb '#6f99c8'" << std::endl;
+                gnuplot_script_file << "set output 'report/figs/battle_ammo_diffusion.png'" << std::endl;
                 gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
                 gnuplot_script_file << "replot" << std::endl;
             }
@@ -295,6 +297,7 @@ struct ModelOutput
                                        " '++' u 1:2:(vx($1,$2)):(vy($1,$2)) with vectors notitle linetype rgb '#6f99c8'" <<
                                        std::endl;
 
+                gnuplot_script_file << "set output 'report/figs/battle_phase_plane.png'" << std::endl;
                 gnuplot_script_file << "set terminal pngcairo enhanced font 'arial,10' fontscale 1.0" << std::endl;
                 gnuplot_script_file << "replot" << std::endl;
             }

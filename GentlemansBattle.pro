@@ -22,7 +22,11 @@ SOURCES += \
 HEADERS += \
 
 DISTFILES += \
-    .gitignore \
+    .gitignore
+
+OTHER_FILES += \
+    nullclines.gnu \
+    nullclines.dat \
     report/gentlemans_battle_report.tex \
     src/phase_plane.py \
     src/ploter.py

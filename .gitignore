@@ -40,6 +40,10 @@ Makefile*
 *.blg
 *.log
 *.synctex.gz
-report/figs/*.dat
-report/figs/*.gnu
+*.dat
+_*.gnu
 
+
+battle_ammo_diffusion.png
+battle_phase_plane.png
+battle_reaction.png
