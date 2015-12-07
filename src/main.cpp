@@ -151,6 +151,7 @@ struct ModelInfo
     {        
         return new_army_size <= model_input.start_army_size * model_input.loose_battle_fraction ||
                 new_enemy_size <= model_input.start_enemy_size * model_input.loose_battle_fraction;
+
     }
 
     /**
@@ -194,6 +195,7 @@ struct ModelOutput
 {
     std::fstream output_file;
     std::fstream phase_plane_file;
+
     const ModelInfo& model_info;
 
     ModelOutput(const ModelInfo& _model_info, const ModelInputData& model_input)
@@ -286,7 +288,7 @@ struct ModelOutput
                 gnuplot_script_file << "vx(x,y) = dEdt(x,y) * vec_scale # * (1 / sqrt(dEdt(x,y)**2 + dIdt(x,y)**2))" << std::endl;
                 gnuplot_script_file << "vy(x,y) = dIdt(x,y) * vec_scale # * (1 / sqrt(dEdt(x,y)**2 + dIdt(x,y)**2))" << std::endl;
 
-                gnuplot_script_file << "set samples 5" << std::endl;
+                gnuplot_script_file << "set samples 20" << std::endl;
                 gnuplot_script_file << "set zeroaxis" << std::endl;
 
                 gnuplot_script_file << "set xlabel 'Número de Soldados - E(t)'" << std::endl;

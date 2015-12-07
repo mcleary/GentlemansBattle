@@ -110,6 +110,7 @@ O modelo proposto foi baseado no modelo de Lanchester porém foram acrescentados
 Considere o embate entre duas forças homogêneas no contexto de uma batalha histórica, onde os exércitos se alinham um de frente para o outro em formação e mantém a posição atirando e substituindo a linha de frente a medida que esta é atingida pelo inimigo. Para o desenvolvimento do modelo, será considerado a força $E$ (o exército sob comando) e a $I$ (o exército inimigo). É desejável saber em que condições o exército $E$ irá vencer ou perder a batalha. Outras perguntas se deseja responder são: Como o número de soldados irá cair com o tempo na batalha? Quantos sobreviventes o vencedor terá? O quanto a eficiência do exército é importante para garantir a vitória na batalha?
 
 \subsection{Modelagem de Formação de Batalha}
+\label{sec:model}
 
 Seja $E(t)$ e $I(t)$ as respectivas forças do exército e do inimigo. A taxa de variação do exército pode ser modelada da seguinte forma:
 
@@ -131,6 +132,7 @@ A difusão da munição é modelada pela equação de difusão em 1D:
 
 \begin{equation}
 	\frac{\partial \mu (t,x)}{\partial t} = D \frac{\partial^2 \mu (t,x) }{\partial x^2}
+	\label{eq:diffusion}
 \end{equation}
 onde $0 < x \leq L$ e $D > 0$ é o coeficiente de difusão da munição pelo exército.
 
@@ -233,13 +235,34 @@ A Tabela \ref{tb:input} lista todos os valores escolhidos para resolução numé
 
 \section{Análise do Modelo}
 
+O modelo de batalhas proposto, apresentado na Seção \ref{sec:model} é composto por três equações. Dessas, duas são compostas exclusivamente por termos de reação (Equações \ref{eq:army} e \ref{eq:enemy}) e uma é composta exclusivamente por um termo de difusão (Equação \ref{eq:diffusion}.
+
+Nesta seção será feita uma análise dos termos de reação do modelo proposto a fim de entender, de forma qualitativa, o comportamento do modelo.
+
+\subsection{Pontos de Equilíbrio e \textit{Nullclines}}
+
+Os pontos de equilíbrio para os termos de reação do modelo de batalhas são obtidos ao fazer $\frac{dE}{dt} = 0$ e $\frac{dI}{dt} = 0$. É evidente que, para as Equações \ref{eq:army} e \ref{eq:enemy}, existem infinitos pontos de equilíbrio localizados nos eixos $x$ e $y$. A fim de visualizar essa informação, a Figura \ref{fig:nullclines} mostra o gráfico com as \textit{Nullclines} de $I(t)$ e $E(t)$. Como $\frac{dE}{dt} < 0$ e $\frac{dI}{dt} < 0$ para todos os instantes de tempo, todos os pontos de equilíbrios são sumidouros e tendem a levar a solução para a origem.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{figs/nullclines.png}
+	\caption{Gráfico com as \textit{Nullclines} de $E(t)$ vs $I(t)$.}
+	\label{fig:nullclines}
+\end{figure}
+
 \subsection{Plano de Fase}
+
+O comportamento das soluções do modelo descritos pelo gráfico de \textit{Nullclines} é corroborado pelo plano de fase dos termos de reação do sistema. Como pode ser visto na Figura \ref{fig:phase-plane}, construída como um campo vetorial de $I(t)$ vs $E(t)$, todas as soluções são levadas para algum dos eixos canônicos.
+
+Pela Figura também é possível perceber que a taxa com que a quantidade de soldados caí no decorrer da batalha é maior quando existem muitos soldados em campo. O que faz sentido, dado que quanto mais soldados em batalha maior a chance de acontecer um acerto por parte do adversário. A medida que o número de soldados vai caindo, a taxa com que o número de soldados caí também é reduzida. Na Figura \ref{fig:phase-plane} foi escolhido o desenho do campo vetorial no lugar do campo de direções para evidenciar esse fato.
+
+A Figura \ref{fig:phase-plane} também é composta pela solução numérica do modelo de acordo com os dados de entrada da Tabela \ref{tb:input}. Os vetores da figura deveriam representar a direção da derivada em cada um dos pontos. Note que isso não acontece na Figura \ref{fig:phase-plane}. Esse fato é decorrente da influência do termo de difusão na solução do sistema. O número de inimigos, para essa solução particular, decresce mais rapidamente que o número de soldados do exército quando a munição fica disponível na linha de frente. Essa disponibilidade é a influência do termo de difusão na solução.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.4]{figs/battle_phase_plane.png}
 	\caption{Resultado da batalha para os dados de entrada da Tabela \ref{tb:input}. Nestas condições o exército sai vitorioso.}
-	\label{fig:battle1}
+	\label{fig:phase-plane}
 \end{figure}
 
 \section{Resultados}
@@ -265,6 +288,14 @@ A Figura \ref{fig:battle1-ammo} mostra a concentração de munição tanto na re
 Pode-se argumentar que não ter munição na linha de frente é uma falha do modelo, mas nesse ponto é razoável assumir que a munição presente na linha de frente não é suficiente para causar dano no inimigo, tornando a modelagem válida.
 
 \section{Conclusão}
+
+Neste trabalho foi apresentado um modelo matemático que descreve a evolução de uma batalha entre duas forças homogêneas com munição limitada na linha de frente. O modelo considera que a munição que é difundida pelo exército de forma que ela deve ser levada da retaguarda para a linha de frente para que a mesma possa causar impacto no inimigo.
+
+Fica evidente que o impacto que a munição tem ao decidir o destino da batalha é significativo. Manter uma fração do exército na linha de frente contando com substituição contínua dos soldados impacta no tempo total da batalha.
+
+O modelo descrito, apesar de simples, pode ser utilizado para descrever o comportamento de uma batalha entre duas forças homogêneas e pode ser uma ferramenta para entender o desfecho de batalhas desse tipo que ocorriam antes dos conflitos armados modernos.
+
+As análises de \textit{Nullclines} e Plano de Fase foram baseadas na teoria apresentada em \cite{chaos}.
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
