@@ -40,7 +40,7 @@ Makefile*
 *.blg
 *.log
 *.synctex.gz
-*.dat
+report/*.dat
 _*.gnu
 
 
