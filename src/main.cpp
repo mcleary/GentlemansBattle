@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-struct ModelInputData
+struct ModelInput
 {
     double start_army_size;             // > 0          Tamanho inicial do exército
     double start_enemy_size;            // > 0          Tamanho inicial do exército inimigo
@@ -24,7 +24,7 @@ struct ModelInputData
     /**
      * @brief ModelInputData default input data
      */
-    ModelInputData()
+    ModelInput()
     {
         start_army_size             = 500.0;
         start_enemy_size            = 500.0;
@@ -45,7 +45,7 @@ struct ModelInputData
     }
 
 
-    friend std::ostream& operator<< (std::ostream& out, const ModelInputData& input_data)
+    friend std::ostream& operator<< (std::ostream& out, const ModelInput& input_data)
     {
         out << "#-------------------------------------------------" << std::endl;
         out << "#--- GentlesmanBattle Input Data" << std::endl;
@@ -79,11 +79,11 @@ struct ModelInfo
     std::vector<double> new_ammo_amount;
     std::vector<double> old_ammo_amount;
 
-    const ModelInputData& model_input;
+    const ModelInput& model_input;
 
     const double CFL = model_input.ammo_diffusion_coeffient * model_input.delta_time / (model_input.delta_x * model_input.delta_x);
 
-    ModelInfo(const ModelInputData& input_data) :
+    ModelInfo(const ModelInput& input_data) :
         model_input(input_data)
     {
         // Setting up the mesh for the ammo diffusion
@@ -196,12 +196,21 @@ struct ModelOutput
     std::fstream output_file;
     std::fstream phase_plane_file;
 
+    const ModelInput& model_input;
     const ModelInfo& model_info;
 
-    ModelOutput(const ModelInfo& _model_info, const ModelInputData& model_input)
-        : model_info(_model_info)
+    const std::string prefix;
+
+    ModelOutput(const ModelInfo& _model_info, const ModelInput& _model_input, const std::string& _prefix = "")
+        : model_input(_model_input),
+          model_info(_model_info),
+          prefix(_prefix)
+    {        
+    }
+
+    void start_execution()
     {
-        output_file.open("_gentlemans_battle.dat", std::ios::out);
+        output_file.open(prefix + "_gentlemans_battle.dat", std::ios::out);
         output_file << model_input << std::endl << std::endl;
         output_file << "# Time  Army    Enemy   Rearguard   Frontline  " << std::endl;
     }
@@ -217,7 +226,7 @@ struct ModelOutput
                        std::endl;
     }
 
-    void stop_execution(bool b_show_gnuplot = true)
+    void stop_execution(bool b_show_plots = true)
     {
         // Write Execution Summary into the output file
         output_file << model_info << std::endl;
@@ -227,12 +236,12 @@ struct ModelOutput
             output_file.close();
         }
 
-        if(b_show_gnuplot)
+        if(b_show_plots)
         {
-            std::string output_filename_quotes = "'_gentlemans_battle.dat'";
-            std::string gnuplot_reaction_script = "_gentlemans_battle_result.gnu";
-            std::string gnuplot_phase_plane_script = "_gentlemans_battle_phase_plane.gnu";
-            std::string gnuplot_diffusion_script = "_gentlemans_battle_diffusion.gnu";
+            std::string output_filename_quotes = "'" + prefix + "_gentlemans_battle.dat'";
+            std::string gnuplot_reaction_script = prefix + "_gentlemans_battle_result.gnu";
+            std::string gnuplot_phase_plane_script = prefix + "_gentlemans_battle_phase_plane.gnu";
+            std::string gnuplot_diffusion_script = prefix + "_gentlemans_battle_diffusion.gnu";
 
             const int title_font_size = 15;
 
@@ -270,7 +279,7 @@ struct ModelOutput
                 gnuplot_script_file << "replot" << std::endl;
             }
             {
-                const ModelInputData& input = model_info.model_input;
+                const ModelInput& input = model_info.model_input;
 
                 std::fstream gnuplot_script_file(gnuplot_phase_plane_script, std::ios::out);
 
@@ -324,19 +333,21 @@ struct ModelOutput
 
 struct GentlesmanBattleModel
 {
-    ModelInputData input;
+    ModelInput input;
     ModelOutput output;
     ModelInfo info;
 
-    GentlesmanBattleModel() :
-        output(info, input), info(input)
+    GentlesmanBattleModel(const std::string& prefix = "") :
+        output(info, input, prefix), info(input)
     {
     }
 
-    void run()
+    void run(bool b_show_plots = true)
     {
         // Print parameters information
         std::cout << input << std::endl;
+
+        output.start_execution();
 
         do
         {
@@ -347,14 +358,30 @@ struct GentlesmanBattleModel
 
         // Print execution summary
         std::cout << info << std::endl;
+
+        output.stop_execution(b_show_plots);
     }
 };
 
 int main()
 {
-    GentlesmanBattleModel model;
-    model.run();
-    model.output.stop_execution();
+    const int num_executions = 1;
+
+    if(num_executions > 1)
+    {
+        for(int i = 0; i < num_executions; ++i)
+        {
+            GentlesmanBattleModel model(std::to_string(i));
+            model.input.army_skill *= static_cast<double>(i) + 1.1; // 10% increase
+            model.run(false);
+        }
+    }
+    else
+    {
+        GentlesmanBattleModel model;
+        model.run();
+    }
+
     return EXIT_SUCCESS;
 }
 
