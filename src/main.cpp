@@ -331,6 +331,77 @@ struct ModelOutput
     }
 };
 
+template<typename ParamType>
+struct ModelCondensedOutput
+{
+    int num_executions;
+    std::string param_name;
+    std::vector<ParamType> param_value_list;
+
+    ModelCondensedOutput(int _num_executions, const std::string& _param_name) :
+        num_executions(_num_executions),
+        param_name(_param_name)
+    {
+        param_value_list.reserve(num_executions);
+    }
+
+    void add_param_value(ParamType param_value)
+    {
+        param_value_list.push_back(param_value);
+    }
+
+    void show_condensed_plot()
+    {
+        std::string script_filename = "_condenser.gnu";
+
+#if 1
+        {
+            std::fstream gnuplot_script_file(script_filename, std::ios::out);
+
+            gnuplot_script_file << "set terminal 'wxt'" << std::endl;
+            gnuplot_script_file << "set xlabel 'Tempo'" << std::endl;
+
+            gnuplot_script_file << "plot ";
+
+            for(int i = 0; i < num_executions; ++i)
+            {
+                gnuplot_script_file << "'" << i << "_gentlemans_battle.dat' using 1:2 with lines linetype rgb '#e800" << i << i << "' title '" << param_name << " = " << param_value_list[i] << "',"
+                                    << "'" << i << "_gentlemans_battle.dat' using 1:3 with lines linetype rgb '#21eb12' notitle '" << param_name << " = " << param_value_list[i] << "',";
+            }
+
+            gnuplot_script_file.close();
+
+            std::string plot_command = "gnuplot -p " + script_filename;
+            std::cout << plot_command << std::endl;
+
+            system(plot_command.data());
+        }
+#endif
+        {
+            std::fstream gnuplot_script_file(script_filename, std::ios::out);
+
+            gnuplot_script_file << "set terminal 'wxt'" << std::endl;
+            gnuplot_script_file << "set xlabel 'Número de Soldados - E(t)'" << std::endl;
+            gnuplot_script_file << "set ylabel 'Número de Inimigos - I(t)" << std::endl;
+
+            gnuplot_script_file << "plot ";
+
+            for(int i = 0; i < num_executions; ++i)
+            {
+                gnuplot_script_file << "'" << i << "_gentlemans_battle.dat' using 2:3 with lines title '" << param_name << " = " << param_value_list[i] << "',";
+            }
+
+            gnuplot_script_file.close();
+
+            std::string plot_command = "gnuplot -p " + script_filename;
+            std::cout << plot_command << std::endl;
+
+            system(plot_command.data());
+
+        }
+    }
+};
+
 struct GentlesmanBattleModel
 {
     ModelInput input;
@@ -345,7 +416,7 @@ struct GentlesmanBattleModel
     void run(bool b_show_plots = true)
     {
         // Print parameters information
-        std::cout << input << std::endl;
+//        std::cout << input << std::endl;
 
         output.start_execution();
 
@@ -357,7 +428,7 @@ struct GentlesmanBattleModel
         while(!info.should_stop());
 
         // Print execution summary
-        std::cout << info << std::endl;
+//        std::cout << info << std::endl;
 
         output.stop_execution(b_show_plots);
     }
@@ -365,16 +436,26 @@ struct GentlesmanBattleModel
 
 int main()
 {
-    const int num_executions = 1;
+    const int num_executions = 10;
+    std::string param_name = "D";
+
+    typedef double ParamType;
+    ParamType param_max = 3.0;
 
     if(num_executions > 1)
     {
+        ModelCondensedOutput<ParamType> condensend_output(num_executions, param_name);
+
         for(int i = 0; i < num_executions; ++i)
         {
             GentlesmanBattleModel model(std::to_string(i));
-            model.input.army_skill *= static_cast<double>(i) + 1.1; // 10% increase
+            model.input.ammo_diffusion_coeffient = (i / static_cast<double>(num_executions)) * param_max;
+            std::cout << model.input.ammo_diffusion_coeffient << std::endl;
             model.run(false);
+
+            condensend_output.add_param_value(model.input.ammo_diffusion_coeffient);
         }
+        condensend_output.show_condensed_plot();
     }
     else
     {
