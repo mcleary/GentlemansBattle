@@ -81,21 +81,27 @@ struct ModelInfo
 
     const ModelInput& model_input;
 
-    const double CFL = model_input.ammo_diffusion_coeffient * model_input.delta_time / (model_input.delta_x * model_input.delta_x);
+    double CFL = 0.0;
 
     ModelInfo(const ModelInput& input_data) :
         model_input(input_data)
     {
+    }
+
+    void update_input()
+    {
         // Setting up the mesh for the ammo diffusion
-        new_ammo_amount.resize(static_cast<int>(input_data.formation_size / input_data.delta_x));
+        new_ammo_amount.resize(static_cast<int>(model_input.formation_size / model_input.delta_x));
         old_ammo_amount.resize(new_ammo_amount.size());
 
         // Initial condition
-        old_army_size = input_data.start_army_size;
-        old_enemy_size = input_data.start_enemy_size;
+        old_army_size = model_input.start_army_size;
+        old_enemy_size = model_input.start_enemy_size;
 
         // Ammot starts at rear-line
         old_ammo_amount[1] = model_input.start_ammo;
+
+        CFL = model_input.ammo_diffusion_coeffient * model_input.delta_time / (model_input.delta_x * model_input.delta_x);
     }
 
     void advance_time()
@@ -331,21 +337,28 @@ struct ModelOutput
     }
 };
 
-template<typename ParamType>
 struct ModelCondensedOutput
 {
     int num_executions;
     std::string param_name;
-    std::vector<ParamType> param_value_list;
+    std::string graph_title;
+    std::string output_filename;
+    std::vector<double> param_value_list;
 
-    ModelCondensedOutput(int _num_executions, const std::string& _param_name) :
+    ModelCondensedOutput(int _num_executions,
+                         const std::string& _param_name,
+                         const std::string& _graph_title,
+                         const std::string& _output_filename
+                         ) :
         num_executions(_num_executions),
-        param_name(_param_name)
+        param_name(_param_name),
+        graph_title(_graph_title),
+        output_filename(_output_filename)
     {
         param_value_list.reserve(num_executions);
     }
 
-    void add_param_value(ParamType param_value)
+    void add_param_value(double param_value)
     {
         param_value_list.push_back(param_value);
     }
@@ -354,7 +367,7 @@ struct ModelCondensedOutput
     {
         std::string script_filename = "_condenser.gnu";
 
-#if 1
+#if 0
         {
             std::fstream gnuplot_script_file(script_filename, std::ios::out);
 
@@ -383,6 +396,7 @@ struct ModelCondensedOutput
             gnuplot_script_file << "set terminal 'wxt'" << std::endl;
             gnuplot_script_file << "set xlabel 'Número de Soldados - E(t)'" << std::endl;
             gnuplot_script_file << "set ylabel 'Número de Inimigos - I(t)" << std::endl;
+            gnuplot_script_file << "set title '" << graph_title << "' font 'Arial, 15'" << std::endl;
 
             gnuplot_script_file << "plot ";
 
@@ -390,6 +404,11 @@ struct ModelCondensedOutput
             {
                 gnuplot_script_file << "'" << i << "_gentlemans_battle.dat' using 2:3 with lines title '" << param_name << " = " << param_value_list[i] << "',";
             }
+            gnuplot_script_file << std::endl;
+
+            gnuplot_script_file << "set terminal pngcairo enhanced font 'Arial, 10' fontscale 1.0" << std::endl;
+            gnuplot_script_file << "set output 'report/figs/battle_" << output_filename << ".png'" << std::endl;
+            gnuplot_script_file << "replot" << std::endl;
 
             gnuplot_script_file.close();
 
@@ -414,9 +433,11 @@ struct GentlesmanBattleModel
     }
 
     void run(bool b_show_plots = true)
-    {
+    {        
         // Print parameters information
-//        std::cout << input << std::endl;
+        std::cout << input << std::endl;
+
+        info.update_input();
 
         output.start_execution();
 
@@ -428,7 +449,7 @@ struct GentlesmanBattleModel
         while(!info.should_stop());
 
         // Print execution summary
-//        std::cout << info << std::endl;
+        std::cout << info << std::endl;
 
         output.stop_execution(b_show_plots);
     }
@@ -439,21 +460,27 @@ int main()
     const int num_executions = 10;
     std::string param_name = "D";
 
-    typedef double ParamType;
-    ParamType param_max = 3.0;
+    double param_min = 0.1;
+    double param_max = 0.8;
 
     if(num_executions > 1)
     {
-        ModelCondensedOutput<ParamType> condensend_output(num_executions, param_name);
+        ModelCondensedOutput condensend_output(num_executions,
+                                               param_name,
+                                               "Resultado da Batalha com a Variação do Coeficiente ",
+                                               "ammo_diffusion_variation");
 
         for(int i = 0; i < num_executions; ++i)
         {
             GentlesmanBattleModel model(std::to_string(i));
-            model.input.ammo_diffusion_coeffient = (i / static_cast<double>(num_executions)) * param_max;
-            std::cout << model.input.ammo_diffusion_coeffient << std::endl;
+//            double param_value = (i / static_cast<double>(num_executions)) * param_max;
+            double param_value = param_min + (param_max - param_min) * (i / static_cast<double>(num_executions));
+
+            model.input.front_line_fraction = param_value;
+
             model.run(false);
 
-            condensend_output.add_param_value(model.input.ammo_diffusion_coeffient);
+            condensend_output.add_param_value(model.input.front_line_fraction);
         }
         condensend_output.show_condensed_plot();
     }
