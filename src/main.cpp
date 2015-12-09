@@ -457,30 +457,29 @@ struct GentlesmanBattleModel
 
 int main()
 {
-    const int num_executions = 10;
-    std::string param_name = "D";
+    const int num_executions = 1;
+    std::string param_name = "k2";
 
-    double param_min = 0.1;
-    double param_max = 0.8;
+    double param_min = 0.001;
+    double param_max = 0.01;
 
     if(num_executions > 1)
     {
         ModelCondensedOutput condensend_output(num_executions,
                                                param_name,
-                                               "Resultado da Batalha com a Variação do Coeficiente de Difusão",
-                                               "ammo_diffusion_variation");
+                                               "Resultado da Batalha com Variação da Perícia do Exército",
+                                               "army_skill_variation");
 
         for(int i = 0; i < num_executions; ++i)
         {
             GentlesmanBattleModel model(std::to_string(i));
-//            double param_value = (i / static_cast<double>(num_executions)) * param_max;
             double param_value = param_min + (param_max - param_min) * (i / static_cast<double>(num_executions));
 
-            model.input.front_line_fraction = param_value;
+            model.input.army_skill = param_value;
 
             model.run(false);
 
-            condensend_output.add_param_value(model.input.front_line_fraction);
+            condensend_output.add_param_value(model.input.army_skill);
         }
         condensend_output.show_condensed_plot();
     }
