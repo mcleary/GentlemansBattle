@@ -82,7 +82,7 @@ Abstract text
 
 \section{Introdução}
 
-Descoberta no século 19 na antiga Suméria, a cidade-estado de Lagash possui ruínas que contém registros que mostram vários aspectos da guerra travada com uma cidade-estado vizinha conhecida como Umma. Nas ruínas foram encontradas representações de soldados sendo devorados por abutres. A relíquia, hoje, encontra-se exposta no Museu do Louvre, em Paris \cite{firstwar}.
+Descoberta no século 19 na antiga Suméria, a cidade-estado de Lagash possui ruínas que contém registros que mostram vários aspectos da guerra travada com uma cidade-estado vizinha conhecida como \textit{Umma}. Nas ruínas foram encontradas representações de soldados sendo devorados por abutres. A relíquia, hoje, encontra-se exposta no Museu do Louvre, em Paris \cite{firstwar}.
 
 Fica claro que conflitos, armados ou não, sempre fizeram parte da história da humanidade. O orçamento dedicado a defesa de vários países corresponde a uma parte significativa do PIB gerado, tornando o aspecto bélico de extrema importância para a defesa e segurança de um país (procurar referência).
 
@@ -320,9 +320,18 @@ Pode-se argumentar que não ter munição na linha de frente é uma falha do mod
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.4]{figs/battle_army_skill_variation.png}
-	\caption{Resultado de batalhas com a variação da perícia do exército ($k_2$).}
+	\caption{Resultado de batalhas com a variação da perícia do exército ($0.001 \leq k_2 < 0.01$).}
 	\label{fig:army-skill-variation}
 \end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.4]{figs/battle_army_skill_variation_2.png}
+	\caption{Resultado de batalhas com a variação da perícia do exército ($0.0001 \leq k_2 < 0.001$).}
+	\label{fig:army-skill-variation2}
+\end{figure}
+
+Uma análise interessante no contexto de batalhas entre exércitos é avaliar o impacto que a perícia do exército tem no resultado da batalha. Para fazer essa análise, o modelo foi utilizado para avaliar diversas batalhas onde a perícia do exército sofre variação ($0.001 \leq k_2 < 0.01$). De forma a ver o resultado das batalhas foi gerado o gráfico da Figura \ref{fig:army-skill-variation}. Nessa figura é possível os diversos resultados. Note que a batalha foi perdida para $k_2 < 0.0064$, a causa da derrota não é somente a baixa perícia do exército. É possível ver que para $k_2 = 0.0055$ o número de baixas do inimigo deixa de aumentar. Isso acontece devido a munição da linha de frente ter se esgotado. A baixa perícia do exército faz com que a munição inicial não seja suficiente para vencer a batalha. É possível ver que mesmo com uma perícia inferior ao inimigo, o aumento do poder de fogo com a munição chegando na linha de frente é considerável.
 
 \begin{figure}[ht]
 	\centering
@@ -331,12 +340,16 @@ Pode-se argumentar que não ter munição na linha de frente é uma falha do mod
 	\label{fig:front-line-size-variation}
 \end{figure}
 
+A fim de ilustrar o que foi afirmado no parágrafo anterior, a quantidade inicial de munição foi aumentada em 10 vezes ($\mu(0,0) = 10000$) enquanto que o intervalo de variação da perícia do exército foi reduzida em 10 vezes ($0.0001 \leq k_2 < 0.001$). A Figura \ref{fig:army-skill-variation2} mostra o resultado das batalhas com essa configuração. Note que a forma do gráfico não muda, o que comprova que o poder de fogo proporcionado pela munição na linha frente pode garantir a vitória mesmo com um exército de perícia mais baixa.
+
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.4]{figs/battle_ammo_diffusion_variation.png}
 	\caption{Resultado de batalhas com a variação do coeficiente de difusão de munição pelo exército ($D$).}
 	\label{fig:ammo-diffusion-variation}
 \end{figure}
+
+Outros resultados foram obtidos através da variação da porcentagem do exército que ocupa a linha de frente ($0.1 \leq \alpha < 1$) e variação do coeficiente de difusão de munição ($0.1 \leq D < 0.8$), Figuras \ref{fig:front-line-size-variation} e \ref{fig:ammo-diffusion-variation}, respectivamente. Os resultados deixam claro o que era esperado do modelo. Quanto maior a linha de frente maior é a probabilidade de sofrer uma baixa, algo similar com a área de contato entre os exércitos ser maior. No caso do coeficiente de difusão, quanto mais rápido a munição chega na linha de frente, mais rápido a batalha é vencida.
 
 \section{Conclusão}
 

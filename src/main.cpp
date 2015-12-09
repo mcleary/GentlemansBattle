@@ -467,7 +467,7 @@ int main()
     {
         ModelCondensedOutput condensend_output(num_executions,
                                                param_name,
-                                               "Resultado da Batalha com a Variação do Coeficiente ",
+                                               "Resultado da Batalha com a Variação do Coeficiente de Difusão",
                                                "ammo_diffusion_variation");
 
         for(int i = 0; i < num_executions; ++i)
