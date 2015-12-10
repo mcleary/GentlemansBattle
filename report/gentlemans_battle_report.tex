@@ -56,14 +56,15 @@
 
 \author{Thales Luis Rodrigues Sabino} % Author name
 
-\date{\today} % Date for the report
+%\date{\today} % Date for the report
+\date{9 de dezembro de 2015}
 
 \begin{document}
 
 \maketitle % Insert the title, author and date
 
 \begin{center}
-Relatório técnico do trabalho realizado na disciplina \textit{Instrução a Modelagem Matemática (2015-3)} do \textbf{Programa de Pós-Graduação em Modelagem Computacional (PGMC)} \textbf{da Universidade Federal de Juiz de Fora (UFJF)}.
+Relatório técnico do trabalho realizado na disciplina \textit{Introdução a Modelagem Matemática (2015-3)} do \textbf{Programa de Pós-Graduação em Modelagem Computacional (PGMC)} \textbf{da Universidade Federal de Juiz de Fora (UFJF)}.
 \end{center}
 
 
@@ -73,7 +74,7 @@ Relatório técnico do trabalho realizado na disciplina \textit{Instrução a Mo
 
 % If you wish to include an abstract, uncomment the lines below
 \begin{abstract}
-Abstract text
+Este trabalho tem como objetivo propor um modelo matemático para representação de conflitos armados no contexto de batalhas históricas. O modelo proposto foi baseado nas equações de Lanchester porém a munição na linha de frente é limitada e deve ser reposta, devendo ser levada da retaguarda até a linha de frente pelo processo de difusão. Foi realizada uma simulação de uma batalha particular e também foi feita uma análise pela variação de diversos parâmetros que compõe o modelo, de forma a extrair informações sobre as condições que podem levar um exército a vitória ou derrota.
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
@@ -82,9 +83,9 @@ Abstract text
 
 \section{Introdução}
 
-Descoberta no século 19 na antiga Suméria, a cidade-estado de Lagash possui ruínas que contém registros que mostram vários aspectos da guerra travada com uma cidade-estado vizinha conhecida como \textit{Umma}. Nas ruínas foram encontradas representações de soldados sendo devorados por abutres. A relíquia, hoje, encontra-se exposta no Museu do Louvre, em Paris \cite{firstwar}.
+Conflitos são parte da história da humanidade, tanto que encontram-se representados através da arte. Exemplo disso é a relíquia descoberta no século XIX na antiga Suméria, a cidade-estado de \textit{Lagash} possui ruínas contendo registros dos vários aspectos da guerra travada com uma cidade-estado vizinha conhecida como \textit{Umma}. Nas ruínas foram encontradas representações de soldados sendo devorados por abutres. A relíquia, hoje, encontra-se exposta no Museu do Louvre, em Paris \cite{firstwar}.
 
-Fica claro que conflitos, armados ou não, sempre fizeram parte da história da humanidade. O orçamento dedicado a defesa de vários países corresponde a uma parte significativa do PIB gerado, tornando o aspecto bélico de extrema importância para a defesa e segurança de um país (procurar referência).
+Conflitos, armados ou não, sempre fizeram parte da história da humanidade. O orçamento dedicado a defesa de vários países corresponde a uma parte significativa do PIB gerado, tornando o aspecto bélico de extrema importância para a defesa e segurança de um país.
 
 É evidente que uma parte significa do dinheiro investido nas forças militares é dedicada ao estudo de situações de combate, estratégias e maneiras eficientes de vencer as batalhas. O termo eficiente, nesse contexto, significa derrotar o inimigo sofrendo um número mínimo de baixas. 
 
@@ -114,14 +115,14 @@ A \textbf{Batalha de Gettysburg} (Figura \ref{fig:gettysburg-battle}) é uma bat
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\linewidth]{figs/edwin_forbes_picketts_charge_1420x654.jpg}
-	\caption{O Assalto de Pickett de uma posição na linha dos Confederados olhando para as linhas da União. Pintura de Edwin Forbes.}
+	\caption{Edwin Forbes. O Assalto de Pickett de uma posição na linha dos Confederados olhando para as linhas da União.}
 	\label{fig:picketts-charge}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.7\linewidth]{figs/Battle_of_Gettysburg_1200x870.jpg}
-	\caption{Pintura da Batalha de Gettysburg}
+	\caption{Thrue de Thulstrup. Batalha de Gettysburg 1887.}
 	\label{fig:gettysburg-battle}	
 \end{figure}
 
@@ -137,7 +138,7 @@ O modelo proposto foi baseado no modelo de Lanchester porém foram acrescentados
 
 \section{Modelo Matemático de Batalhas Históricas}
 
-Considere o embate entre duas forças homogêneas no contexto de uma batalha histórica, onde os exércitos se alinham um de frente para o outro em formação e mantém a posição atirando e substituindo a linha de frente a medida que esta é atingida pelo inimigo. Para o desenvolvimento do modelo, será considerado a força $E$ (o exército sob comando) e a $I$ (o exército inimigo). É desejável saber em que condições o exército $E$ irá vencer ou perder a batalha. Outras perguntas se deseja responder são: Como o número de soldados irá cair com o tempo na batalha? Quantos sobreviventes o vencedor terá? O quanto a eficiência do exército é importante para garantir a vitória na batalha?
+Considere o embate entre duas forças homogêneas no contexto de uma batalha histórica, onde os exércitos se alinham um de frente para o outro em formação e mantém a posição atirando e substituindo a linha de frente a medida que esta é atingida pelo inimigo. Para o desenvolvimento do modelo, será considerado que a força dos exércitos é medida pelo número de soldados presentes em campo de um determinado instante de tempo. $E$ (o exército sob comando) e a $I$ (o exército inimigo) são as funções que representam essas quantidades. É desejável saber em que condições o exército $E$ irá vencer ou perder a batalha. Outras perguntas se deseja responder são: Como o número de soldados irá cair com o tempo na batalha? Quantos sobreviventes o vencedor terá? O quanto a eficiência do exército é importante para garantir a vitória na batalha?
 
 \subsection{Modelagem de Formação de Batalha}
 \label{sec:model}
@@ -148,7 +149,7 @@ Seja $E(t)$ e $I(t)$ as respectivas forças do exército e do inimigo. A taxa de
 	\frac{dE(t)}{dt} = -k_1 \alpha E(t) \beta I(t)
 	\label{eq:army}
 \end{equation}
-onde $0 < k_1 \leq 1$ é a constante que mede a eficiência do inimigo e $0 < \alpha,\beta \leq 1$ é a porcentagem do exército que irá compor as linhas de frente do exército e do inimigo em um dado momento. A Equação \ref{eq:army} pode ser resumida como a modelagem da batalha das duas linhas de frente por unidade de tempo.
+onde $0 < k_1 \leq 1$ é a constante que mede a eficiência do inimigo e $0 < \alpha,\beta \leq 1$ é a porcentagem do exército que irá compor as linhas de frente do exército e do inimigo, respectivamente, em um dado momento. A Equação \ref{eq:army} pode ser resumida como a modelagem do embate entre as duas linhas de frente.
 
 De maneira análoga, a taxa com que o exército inimigo é cai é modelada como o encontro das duas linhas de frente:
 
@@ -177,7 +178,7 @@ Após a escolha dos parâmetros da batalha, as condições iniciais dizem respei
 \end{eqnarray}
 onde $\Upsilon, \Phi, \Delta > 0$.
 
-Para as condições de contorno é importante notar que na retaguarda $x=0$ não há fluxo de munição, porém na linha de frente a munição é utilizada a uma taxa proporcional a taxa de disparos que o exército consegue efetuar, logo:
+Para as condições de contorno é importante notar que na retaguarda $(x=0)$ não há fluxo de munição, porém na linha de frente a munição é utilizada a uma taxa proporcional a taxa de disparos que o exército consegue efetuar, logo:
 
 \begin{eqnarray}
 	\nabla \mu(t,L) \cdot \eta(x) &=& -\frac{\rho \mu(t,L)}{D \alpha E(t)} \\
@@ -186,13 +187,13 @@ Para as condições de contorno é importante notar que na retaguarda $x=0$ não
 
 \subsubsection{Condição para Vitória}
 
-O exército vencedor de uma batalha é aquele que permanece com a maior parte de seus soldados em campo. No modelo proposto, para considerar que um dos exércitos perdeu a batalha, uma fração do número original de soldados deve ser atingida. Um exército é considerado perdedor se essa fração for atingida, declarando rendição ao adversário. Para implementar essa condição um valor $0 < \gamma \leq 1$ é escolhido de forma que se $E < \gamma E(t)$ considera-se derrota para o inimigo e se $I < \gamma I(t)$ considera-se vitória sobre o inimigo.
+O exército vencedor de uma batalha é aquele que permanece com um número maior de soldados em campo quando a contagem de um dos lados chega a um determinado valor. No modelo proposto, para considerar que um dos exércitos perdeu a batalha, uma fração do número original de soldados deve ser atingida. Um exército é considerado perdedor se essa fração for atingida, declarando rendição ao adversário. Para implementar essa condição um valor $0 < \gamma \leq 1$ é escolhido de forma que se $E < \gamma E(t)$ considera-se derrota para o inimigo e se $I < \gamma I(t)$ considera-se vitória sobre o inimigo para algum instante de tempo $t>0$
 
 \subsection{Discretização por Diferenças Finitas}
 
 Para solucionar o modelo, foi escolhido o método de diferenças finitas explicito para solução numérica das equações diferenciais que fazem parte do modelo.
 
-Para as Equações \ref{eq:army} e \ref{eq:enemy} foi escolhida o esquema para frente no tempo, logo a discretização por diferenças finitas para a Equação \ref{eq:army} é dada por:
+Para as Equações \ref{eq:army} e \ref{eq:enemy} foi escolhido o esquema para frente no tempo, logo a discretização por diferenças finitas para a Equação \ref{eq:army} é dada por:
 
 \begin{equation}
 	\frac{dE}{dt} = \frac{E^{t+1} - E^t}{\Delta t} = -k_1 \alpha E(t) \beta I(t)
@@ -209,7 +210,7 @@ De forma análoga, a discretização da Equação \ref{eq:enemy} depois de isola
 	I^{t+1} = I^{t} - \Delta t \left[ k_2 \rho \mu(t,L) \alpha E(t) \beta I(t) \right]
 \end{equation}
 
-Para a discretização da equação de difusão foi escolhido o esquema de diferenças centras no espaço e para frente no tempo, logo:
+Para a discretização da equação de difusão foi escolhido o esquema de diferenças centradas no espaço e para frente no tempo, logo:
 
 \begin{equation}
 	\frac{\partial \mu}{\partial t} = \frac{\mu_{t+1}^{i} - \mu_i^t}{\Delta t} = D \left( \frac{\mu_{i-1}^t - 2\mu_i^t + \mu_{i+2}^{t}}{( \Delta x)^2 } \right)
@@ -265,24 +266,24 @@ A Tabela \ref{tb:input} lista todos os valores escolhidos para resolução numé
 
 \section{Análise do Modelo}
 
-O modelo de batalhas proposto, apresentado na Seção \ref{sec:model} é composto por três equações. Dessas, duas são compostas exclusivamente por termos de reação (Equações \ref{eq:army} e \ref{eq:enemy}) e uma é composta exclusivamente por um termo de difusão (Equação \ref{eq:diffusion}.
+O modelo de batalhas proposto, apresentado na Seção \ref{sec:model}, é composto por três equações. Dessas, duas são compostas exclusivamente por termos de reação (Equações \ref{eq:army} e \ref{eq:enemy}) e uma é composta exclusivamente por um termo de difusão (Equação \ref{eq:diffusion}.
 
-Nesta seção será feita uma análise dos termos de reação do modelo proposto a fim de entender, de forma qualitativa, o comportamento do modelo.
+Nesta seção será feita uma análise dos termos de reação do modelo proposto a fim de entender, de forma qualitativa, o comportamento das soluções.
 
 \subsection{Pontos de Equilíbrio e \textit{Nullclines}}
 
-Os pontos de equilíbrio para os termos de reação do modelo de batalhas são obtidos ao fazer $\frac{dE}{dt} = 0$ e $\frac{dI}{dt} = 0$. É evidente que, para as Equações \ref{eq:army} e \ref{eq:enemy}, existem infinitos pontos de equilíbrio localizados nos eixos $x$ e $y$. A fim de visualizar essa informação, a Figura \ref{fig:nullclines} mostra o gráfico com as \textit{Nullclines} de $I(t)$ e $E(t)$. Como $\frac{dE}{dt} < 0$ e $\frac{dI}{dt} < 0$ para todos os instantes de tempo, todos os pontos de equilíbrios são sumidouros e tendem a levar a solução para a origem.
+Os pontos de equilíbrio para os termos de reação do modelo de batalhas são obtidos ao fazer $\frac{dE}{dt} = 0$ e $\frac{dI}{dt} = 0$. É evidente que, para as Equações \ref{eq:army} e \ref{eq:enemy}, existem infinitos pontos de equilíbrio localizados nos eixos $x$ e $y$. A fim de visualizar essa informação, a Figura \ref{fig:nullclines} mostra o gráfico com as \textit{Nullclines} de $I(t)$ e $E(t)$. Como $\frac{dE}{dt} < 0$ e $\frac{dI}{dt} < 0$ para todos os instantes de tempo, todos os pontos de equilíbrios são sumidouros e tendem a levar a solução para a origem. Por razões obvias, valores negativos não foram considerados por se tratar do número de soldados em campo.
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.4]{figs/nullclines.png}
+	\includegraphics[scale=0.35]{figs/nullclines.png}
 	\caption{Gráfico com as \textit{Nullclines} de $E(t)$ vs $I(t)$.}
 	\label{fig:nullclines}
 \end{figure}
 
 \subsection{Plano de Fase}
 
-O comportamento das soluções do modelo descritos pelo gráfico de \textit{Nullclines} é corroborado pelo plano de fase dos termos de reação do sistema. Como pode ser visto na Figura \ref{fig:phase-plane}, construída como um campo vetorial de $I(t)$ vs $E(t)$, todas as soluções são levadas para algum dos eixos canônicos.
+O comportamento das soluções do modelo descritas pelo gráfico de \textit{Nullclines} é corroborado pelo plano de fase dos termos de reação do sistema. Como pode ser visto na Figura \ref{fig:phase-plane}, construída como um campo vetorial de $I(t)$ vs $E(t)$, todas as soluções são levadas para algum dos eixos canônicos.
 
 Pela Figura também é possível perceber que a taxa com que a quantidade de soldados caí no decorrer da batalha é maior quando existem muitos soldados em campo. O que faz sentido, dado que quanto mais soldados em batalha maior a chance de acontecer um acerto por parte do adversário. A medida que o número de soldados vai caindo, a taxa com que o número de soldados caí também é reduzida. Na Figura \ref{fig:phase-plane} foi escolhido o desenho do campo vetorial no lugar do campo de direções para evidenciar esse fato.
 
@@ -299,23 +300,23 @@ A Figura \ref{fig:phase-plane} também é composta pela solução numérica do m
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.4]{figs/battle_reaction.png}
+	\includegraphics[scale=0.35]{figs/battle_reaction.png}
 	\caption{Resultado da batalha para os dados de entrada da Tabela \ref{tb:input}. Nestas condições o exército sai vitorioso.}
 	\label{fig:battle1}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.4]{figs/battle_ammo_diffusion.png}
+	\includegraphics[scale=0.35]{figs/battle_ammo_diffusion.png}
 	\caption{Difusão da munição a partir da retaguarda até a linha de frente. Como a munição se concentra totalmente na retaguarda, ela rapidamente chega a linha de frente.}
 	\label{fig:battle1-ammo}
 \end{figure}
 
-A Figura \ref{fig:battle1} mostra o resultado da batalha descrita pelos dados de entrada mostrados na Tabela \ref{tb:input}. É possível ver claramente que a estratégia de manter uma formação compacta, com uma pequena quantidade de soldados na linha-de-frente, é eficiente. É possível ver claramente o momento em que a munição começa a 
+A Figura \ref{fig:battle1} mostra o resultado da batalha descrita pelos dados de entrada mostrados na Tabela \ref{tb:input}. É possível ver claramente que a estratégia de manter uma formação compacta, com uma pequena quantidade de soldados na linha-de-frente, é eficiente. É possível ver, também, o momento em que a munição começa a ser usada pela linha de frente do exército $(t \approx 2)$. Neste momento o número de soldados inimigos começa a cair drasticamente.
 
-A Figura \ref{fig:battle1-ammo} mostra a concentração de munição tanto na retaguarda quando na linha de frente para o exército sendo modelado. Note que, no inicio da batalha, o exército começa sofrente baixas, porém como a linha de frente é relativamente pequena em relação ao número de soldados, as baixas não representam perdas significativas do contingente de soldados. Por volta de $t = 2$, quando a munição começa a chegar na linha de frente, é possível ver uma reviravolta drástica no destino da batalha. Como a perícia e o poder de fogo do exército são maiores em relação ao inimigo, quando a munição fica disponível na linha de frente, a queda no contingente inimigo é significativa levando-os a vitória.
+A Figura \ref{fig:battle1-ammo} mostra a concentração de munição tanto na retaguarda quando na linha de frente para o exército sendo modelado. Note que, no inicio da batalha, o exército começa sofrente baixas, porém como a linha de frente é relativamente pequena em relação ao número de soldados, as baixas não representam perdas significativas do contingente de soldados. Em $t \approx 2$, quando a munição começa a chegar na linha de frente, é possível ver uma reviravolta drástica no destino da batalha. Como a perícia e o poder de fogo do exército são maiores em relação ao inimigo, quando a munição fica disponível na linha de frente, a queda no contingente inimigo é significativa levando-os a derrota.
 
-Pode-se argumentar que não ter munição na linha de frente é uma falha do modelo, mas nesse ponto é razoável assumir que a munição presente na linha de frente não é suficiente para causar dano no inimigo, tornando a modelagem válida.
+Pode-se argumentar que não ter munição na linha de frente no início da batalha $(t=0a)$ é uma falha do modelo, mas nesse ponto é razoável assumir que a munição presente na linha de frente não é suficiente para causar dano no inimigo, tornando a modelagem válida.
 
 \begin{figure}[ht]
 	\centering
@@ -335,31 +336,43 @@ Uma análise interessante no contexto de batalhas entre exércitos é avaliar o 
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.3]{figs/battle_front_line_variation.png}
+	\includegraphics[scale=0.35]{figs/battle_front_line_variation.png}
 	\caption{Resultado de batalhas com a variação da porcentagem do exército na linha de frente ($\alpha$).}
 	\label{fig:front-line-size-variation}
 \end{figure}
 
-A fim de ilustrar o que foi afirmado no parágrafo anterior, a quantidade inicial de munição foi aumentada em 10 vezes ($\mu(0,0) = 10000$) enquanto que o intervalo de variação da perícia do exército foi reduzida em 10 vezes ($0.0001 \leq k_2 < 0.001$). A Figura \ref{fig:army-skill-variation2} mostra o resultado das batalhas com essa configuração. Note que a forma do gráfico não muda, o que comprova que o poder de fogo proporcionado pela munição na linha frente pode garantir a vitória mesmo com um exército de perícia mais baixa.
+A fim de ilustrar o que foi afirmado no parágrafo anterior, a quantidade inicial de munição foi aumentada em 10 vezes ($\mu(0,0) = 10000$) enquanto que o intervalo de variação da perícia do exército foi reduzido em 10 vezes ($0.0001 \leq k_2 < 0.001$). A Figura \ref{fig:army-skill-variation2} mostra o resultado das batalhas com essa configuração. Note que a forma do gráfico não muda, o que comprova que o poder de fogo proporcionado pela munição na linha frente pode garantir a vitória mesmo com um exército de perícia mais baixa.
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.3]{figs/battle_ammo_diffusion_variation.png}
-	\caption{Resultado de batalhas com a variação do coeficiente de difusão de munição pelo exército ($D$).}
+	\includegraphics[scale=0.35]{figs/battle_ammo_diffusion_variation.png}
+	\caption{Resultado de batalhas com a variação do coeficiente de difusão de munição pelo exército ($0.1 \leq D < 0.8$).}
 	\label{fig:ammo-diffusion-variation}
 \end{figure}
 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.35]{figs/battle_formation_size_variation.png}
+	\caption{Resultado de batalhas com a variação do tamanho da formação ($2 \leq L < 20$).}
+	\label{fig:formation-size-variation}
+\end{figure}
+
+
 Outros resultados foram obtidos através da variação da porcentagem do exército que ocupa a linha de frente ($0.1 \leq \alpha < 1$) e variação do coeficiente de difusão de munição ($0.1 \leq D < 0.8$), Figuras \ref{fig:front-line-size-variation} e \ref{fig:ammo-diffusion-variation}, respectivamente. Os resultados deixam claro o que era esperado do modelo. Quanto maior a linha de frente maior é a probabilidade do exército sofrer uma baixa, algo similar com a área de contato entre os exércitos ser maior. No caso do coeficiente de difusão, quanto mais rápido a munição chega na linha de frente, mais rápido a batalha é vencida.
+
+Por último, foi feita a variação no espaçamento da formação ($2 \leq L < 20$). Esse parâmetro indica qual a distância entre a retaguarda e a linha de frente. Os resultados da variação desse parâmetro são mostrados no gráfico da Figura \ref{fig:formation-size-variation}. Novamente, os resultados estão de acordo com a proposta do modelo. Quanto mais compacta a formação mais rápido a munição chega na linha de frente, e quanto mais espaçada, mais tempo levará para que a munição esteja disponível para uso. Pode-se perceber que se a formação estiver muito espaçada ($L > 12.8$), o tempo para que a munição chegue na linha de frente se torna tão grande que a batalha é perdida.
 
 \section{Conclusão}
 
 Neste trabalho foi apresentado um modelo matemático que descreve a evolução de uma batalha entre duas forças homogêneas com munição limitada na linha de frente. O modelo considera que a munição que é difundida pelo exército de forma que ela deve ser levada da retaguarda para a linha de frente para que a mesma possa causar impacto no inimigo.
 
-Fica evidente que o impacto que a munição tem ao decidir o destino da batalha é significativo. Manter uma fração do exército na linha de frente contando com substituição contínua dos soldados impacta no tempo total da batalha.
+Fica evidente que o impacto que a munição tem ao decidir o destino da batalha é significativo. Manter uma fração do exército na linha de frente contando com substituição contínua dos soldados impacta no tempo total da batalha, porém uma linha de frente menor significa menos mortes por unidade de tempo, já que a probabilidade do inimigo acertar um disparo é proporcional ao tamanho da linha de frente.
 
-O modelo descrito, apesar de simples, pode ser utilizado para descrever o comportamento de uma batalha entre duas forças homogêneas e pode ser uma ferramenta para entender o desfecho de batalhas desse tipo que ocorriam antes dos conflitos armados modernos.
+O modelo descrito, apesar de simples, pode ser utilizado para descrever o comportamento de uma batalha entre duas forças homogêneas e pode ser uma boa ferramenta para entender o desfecho de batalhas desse tipo que ocorriam antes dos conflitos armados modernos.
 
 As análises de \textit{Nullclines} e Plano de Fase foram baseadas na teoria apresentada em \cite{chaos}.
+
+O código fonte com a implementação do modelo está disponível em \url{https://github.com/mcleary/GentlemansBattle}.
 
 
 %----------------------------------------------------------------------------------------
